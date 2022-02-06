@@ -4,4 +4,6 @@ from .views import Articles
 
 urlpatterns = [
     path('', Articles),
+    path('', Articles),
+    path('', Articles),
 ]
