@@ -1,0 +1,9 @@
+<div class="articles">
+    {% for el_article in articles %}
+        <div class="article-{{el_article.id}}">
+            <a href="{% url 'articles:article_view' pk=el_article.id %}">
+                <h2 class="title">{{ el_article.title }}</h2>
+            </a>
+        </div>
+    {% endfor %}
+</div>

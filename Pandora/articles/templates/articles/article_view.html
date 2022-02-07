@@ -3,5 +3,6 @@
 {% block body %}
     {% include 'articles/includes/categories.html' %}
 
-    {% include 'articles/includes/title_article.html' %}
+    <h1> {{ article.title }} </h1>
+    <p> {{ article.content }} </p>
 {% endblock %}

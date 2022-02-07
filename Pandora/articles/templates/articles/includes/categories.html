@@ -1,0 +1,9 @@
+<div class="categories">
+    {% for el_categories in categories %}
+    <div class="category-{{el_categories.id}}">
+        <a href="{% url 'articles:category_view' pk=el_categories.id %}">
+            <h5 class="title">{{ el_categories.title }}</h5>
+        </a>
+    </div>
+    {% endfor %}
+</div>
