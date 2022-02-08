@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Intergalactic Entertainment</title>
+        <meta name="description" content="website description" />
+        <meta name="keywords" content="website keywords, website keywords" />
+        {% include "inc-style.html" %}
+    </head>
+    <body>
+        {% include "inc-menu.html" %}
+        {% block body %}{% endblock %}
+        {% include "inc-footer.html" %}
+    </body>
+</html>

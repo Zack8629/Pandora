@@ -1,12 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
-</html>
+{%extends "base.html" %}
+
+{% block body %}
+  <div id="main">
+
+    <div id="content_header"></div>
+    <div id="site_content">
+<!--      <div id="banner"></div>-->
+      {% include "inc-sidebar.html" %}
+      <div id="content">
+        <!-- insert the page content here -->
+
+        <h1>Все статьи</h1>
+
+                  {% for item in articles %}
+          <h4>{{item.title}}</h4>
+         <h5>дата публикации:{{item.created_at}}</h5>
+          <h5>тематика: {{item.category}}</h5>
+          <p>{{item.content}}</p>
+        {% endfor %}
+
+      </div>
+    </div>
+    {% endblock %}
+
+  </div>
