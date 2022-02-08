@@ -1,0 +1,35 @@
+{% extends 'account/base.html' %}
+{% block content%}
+
+<div class="text-center">
+
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+{% if next %}
+    {% if user.is_authenticated %}
+    <p>Your account doesn't have access to this page. To proceed,
+    please login with an account that has access.</p>
+    {% else %}
+    <p>Please login to see this page.</p>
+    {% endif %}
+{% endif %}
+    <form class="form-signin form-control" method="post" action="{% url 'account:login' %}">
+        {% csrf_token %}
+          <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+          <label for="{{ form.username.id_for_label }}" class="sr-only">Username</label>
+            <div>{{ form.username}}</div>
+        <label for="{{ form.password.id_for_label}}" class="sr-only">Password</label>
+          <div>{{ form.password }} </div>
+          <div class="checkbox mb-3">
+            <label>
+              <input type="checkbox" value="remember-me"> Remember me
+            </label>
+          </div>
+          <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        </form>
+
+</div>
+
+{% endblock%}

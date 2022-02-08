@@ -18,10 +18,20 @@
           <div class="sidebar_item">
             <h3>Тематики</h3>
             <ul>
+<<<<<<< HEAD
               <li><a href="#">Дизайн</a></li>
               <li><a href="#">Веб-разработка</a></li>
               <li><a href="#">Мобильная разработка</a></li>
               <li><a href="#">Маркетинг</a></li>
+=======
+
+              {% for el_categories in categories %}
+                <li><a href="{% url 'articles:category_view' pk=el_categories.id %}">
+                    {{ el_categories.title }}
+                </a></li>
+              {% endfor %}
+
+>>>>>>> controllers
             </ul>
           </div>
           <div class="sidebar_base"></div>
