@@ -9,7 +9,7 @@
             <p>В 2022 году Компания InterGalactic Entertainment запускает образовательную экосистема, в которой любой
               человек может получить необходимые знания и навыки для успешной смены профессии и карьерного роста.
               Экосистема будет общей платформой, где выпускники могут обмениваться полезной информацией и
-              формировать свою базу знаний. <br /><a href="#">Чиать далее</a></p>
+              формировать свою базу знаний. <br /><a href="#">Читать далее</a></p>
           </div>
           <div class="sidebar_base"></div>
         </div>
@@ -18,20 +18,11 @@
           <div class="sidebar_item">
             <h3>Тематики</h3>
             <ul>
-<<<<<<< HEAD
-              <li><a href="#">Дизайн</a></li>
-              <li><a href="#">Веб-разработка</a></li>
-              <li><a href="#">Мобильная разработка</a></li>
-              <li><a href="#">Маркетинг</a></li>
-=======
-
               {% for el_categories in categories %}
                 <li><a href="{% url 'articles:category_view' pk=el_categories.id %}">
                     {{ el_categories.title }}
                 </a></li>
               {% endfor %}
-
->>>>>>> controllers
             </ul>
           </div>
           <div class="sidebar_base"></div>

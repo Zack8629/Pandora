@@ -36,9 +36,5 @@ def category_view(request, pk):
         'articles': articles,
         'categories': get_all_categories(),
     }
-<<<<<<< HEAD
-    return render(request, template_name='articles/index.html', context=context)
-=======
 
     return render(request, 'articles/category_view.html', context)
->>>>>>> controllers

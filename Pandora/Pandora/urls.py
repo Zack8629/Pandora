@@ -20,14 +20,11 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-<<<<<<< HEAD
-    path('', include('articles.urls')),
-=======
 
     path('', include('articles.urls', namespace='articles')),
 
     path('accounts/', include('account.urls', namespace='account')),
->>>>>>> controllers
+
 ]
 
 if settings.DEBUG:

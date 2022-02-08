@@ -2,25 +2,14 @@
       <div id="logo">
         <div id="logo_text">
           <!-- class="logo_colour", allows you to change the colour of the text -->
-<<<<<<< HEAD
-          <h1><a href="http://localhost:8080/">intergalactic<span class="logo_colour">_entertainment</span></a></h1>
-=======
           <h1><a href="{% url 'articles:index_articles' %}">intergalactic<span class="logo_colour">_entertainment</span></a></h1>
->>>>>>> controllers
           <h2>знания и навыки для успешной смены профессии и карьерного роста</h2>
         </div>
       </div>
       <div id="menubar">
         <ul id="menu">
           <!-- put class="selected" in the li tag for the selected page - to highlight which page you're on -->
-<<<<<<< HEAD
-            <li><a href="http://localhost:8080/">Главная</a></li>
-            <li><a href="http://localhost:8080/">Дизайн</a></li>
-            <li><a href="http://localhost:8080/">Веб-разработка</a></li>
-            <li><a href="http://localhost:8080/">Мобильная разработка</a></li>
-            <li><a href="http://localhost:8080/">Маркетинг</a></li>
-            <li><a href="http://localhost:8080/">Личный кабинет</a></li>
-=======
+
             <li><a href="{% url 'articles:index_articles' %}">Главная</a></li>
 
             {% for el_categories in categories %}
@@ -30,8 +19,6 @@
                     </a>
                 </li>
             {% endfor %}
-
->>>>>>> controllers
         </ul>
       </div>
     </div>
@@ -46,5 +33,4 @@
             nav_menu.children[i].className = 'selected'
             }
     }
-    // }
 </script>
