@@ -1,0 +1,30 @@
+<div id="header">
+      <div id="logo">
+        <div id="logo_text">
+          <!-- class="logo_colour", allows you to change the colour of the text -->
+          <h1><a href="http://localhost:8080/">intergalactic<span class="logo_colour">_entertainment</span></a></h1>
+          <h2>знания и навыки для успешной смены профессии и карьерного роста</h2>
+        </div>
+      </div>
+      <div id="menubar">
+        <ul id="menu">
+          <!-- put class="selected" in the li tag for the selected page - to highlight which page you're on -->
+            <li><a href="http://localhost:8080/">Главная</a></li>
+            <li><a href="http://localhost:8080/">Тематики</a></li>
+            <li><a href="http://localhost:8080/">Личный кабинет</a></li>
+        </ul>
+      </div>
+    </div>
+
+
+<script>
+    let current = 0;
+    let nav_menu = document.getElementById("menu")
+
+    for (let i = 0; i < nav_menu.children.length; i++) {
+            if (nav_menu.children[i].firstChild.href === nav_menu.children[i].baseURI) {
+            nav_menu.children[i].className = 'selected'
+            }
+    }
+    // }
+</script>
