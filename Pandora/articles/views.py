@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.views.generic import DetailView
 
 from .models import Articles, Category
 
@@ -38,3 +39,20 @@ def category_view(request, pk):
     }
 
     return render(request, 'articles/category_view.html', context)
+
+
+def articles(request):
+    articles = Articles.objects.all()
+    context = {
+        "articles": articles
+    }
+    return render(request, template_name='articles/index.html', context=context)
+
+
+class CategoryDetail(DetailView):
+    model = Category
+    template_name = 'articles/category_detail.html'
+    context_object_name = 'category'
+
+    def get_object(self, queryset=None):
+        return Category.objects.get(id=self.kwargs['pk'])
