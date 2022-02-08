@@ -1,3 +1,0 @@
-source /home/zack/my_venvs/pnd/bin/activate
-
-cd /home/zack/studies/Pandora/Pandora
