@@ -30,7 +30,7 @@ def article_view(request, pk):
         'categories': get_all_categories(),
     }
 
-    return render(request, 'articles/index.html', context)
+    return render(request, 'articles/article.html', context)
 
 
 # def category_view(request, pk):
