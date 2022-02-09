@@ -1,13 +1,48 @@
-from multiprocessing import context
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404
+from django.views.generic import DetailView
 
-from .models import Articles
+from .models import Articles, Category
 
 
-def ArticlesView(request):
-    articles = Articles.objects.all()
+def get_all_categories():
+    return Category.objects.all()
+
+
+def get_all_articles():
+    return Articles.objects.all()
+
+
+def articles_all(request):
     context = {
-        "articles": articles
+        'page_title': 'Все тексты',
+        'articles': get_all_articles(),
+        'categories': get_all_categories(),
     }
-    return render(request, template_name='articles/index.html', context=context)
+
+    return render(request, 'articles/index.html', context)
+
+
+def article_view(request, pk):
+    article = get_object_or_404(Articles, pk=pk)
+    context = {
+        'page_title': 'Выбранная статья',
+        'article': article,
+        'categories': get_all_categories(),
+    }
+
+    return render(request, 'articles/article.html', context)
+
+
+class CategoryDetail(DetailView):
+    model = Category
+    template_name = 'articles/category_detail.html'
+    selected_category = get_all_categories().filter(id=1)
+
+    def get_context_data(self, **kwargs):
+        """Returns the data passed to the template"""
+        selected_category = Category.objects.get(id=self.kwargs['pk'])
+        return {
+            "articles": Articles.objects.filter(category_id=self.kwargs['pk']),
+            "selected_category": selected_category.title,
+            'categories': get_all_categories()
+        }
