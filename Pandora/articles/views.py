@@ -8,11 +8,14 @@ def get_all_categories():
     return Category.objects.all()
 
 
+def get_all_articles():
+    return Articles.objects.all()
+
+
 def articles_all(request):
-    articles = Articles.objects.all()
     context = {
         'page_title': 'Все тексты',
-        'articles': articles,
+        'articles': get_all_articles(),
         'categories': get_all_categories(),
     }
 
@@ -27,26 +30,17 @@ def article_view(request, pk):
         'categories': get_all_categories(),
     }
 
-    return render(request, 'articles/article_view.html', context)
+    return render(request, 'articles/index.html', context)
 
 
-def category_view(request, pk):
-    articles = Articles.objects.all()
-    context = {
-        'page_title': 'Выбранный раздел',
-        'articles': articles,
-        'categories': get_all_categories(),
-    }
-
-    return render(request, 'articles/category_view.html', context)
-
-
-def articles(request):
-    articles = Articles.objects.all()
-    context = {
-        "articles": articles
-    }
-    return render(request, template_name='articles/index.html', context=context)
+# def category_view(request, pk):
+#     context = {
+#         'page_title': 'Выбранный раздел',
+#         'articles': get_all_articles(),
+#         'categories': get_all_categories(),
+#     }
+#
+#     return render(request, 'articles/index.html', context)
 
 
 class CategoryDetail(DetailView):
