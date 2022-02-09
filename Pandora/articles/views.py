@@ -46,7 +46,10 @@ def article_view(request, pk):
 class CategoryDetail(DetailView):
     model = Category
     template_name = 'articles/category_detail.html'
-    context_object_name = 'category'
+    context_object_name = 'articles'
+    selected_category = get_all_categories().filter(id=1)
+    extra_context = {'categories': get_all_categories()}
 
     def get_object(self, queryset=None):
-        return Category.objects.get(id=self.kwargs['pk'])
+        selected_category = Category.objects.get(id=self.kwargs['pk'])
+        return Articles.objects.filter(category_id=selected_category.id)
