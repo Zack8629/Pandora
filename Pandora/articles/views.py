@@ -50,6 +50,14 @@ class CategoryDetail(DetailView):
     selected_category = get_all_categories().filter(id=1)
     extra_context = {'categories': get_all_categories()}
 
-    def get_object(self, queryset=None):
+    def get_context_data(self, **kwargs):
+        """Returns the data passed to the template"""
         selected_category = Category.objects.get(id=self.kwargs['pk'])
-        return Articles.objects.filter(category_id=selected_category.id)
+        return {
+            "articles": self.get_object(),
+            "selected_category": selected_category.title,
+            'categories': get_all_categories()
+        }
+
+    def get_object(self, queryset=None):
+        return Articles.objects.filter(category_id=self.kwargs['pk'])
