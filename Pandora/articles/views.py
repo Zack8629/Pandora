@@ -33,31 +33,16 @@ def article_view(request, pk):
     return render(request, 'articles/article.html', context)
 
 
-# def category_view(request, pk):
-#     context = {
-#         'page_title': 'Выбранный раздел',
-#         'articles': get_all_articles(),
-#         'categories': get_all_categories(),
-#     }
-#
-#     return render(request, 'articles/index.html', context)
-
-
 class CategoryDetail(DetailView):
     model = Category
     template_name = 'articles/category_detail.html'
-    context_object_name = 'articles'
     selected_category = get_all_categories().filter(id=1)
-    extra_context = {'categories': get_all_categories()}
 
     def get_context_data(self, **kwargs):
         """Returns the data passed to the template"""
         selected_category = Category.objects.get(id=self.kwargs['pk'])
         return {
-            "articles": self.get_object(),
+            "articles": Articles.objects.filter(category_id=self.kwargs['pk']),
             "selected_category": selected_category.title,
             'categories': get_all_categories()
         }
-
-    def get_object(self, queryset=None):
-        return Articles.objects.filter(category_id=self.kwargs['pk'])
