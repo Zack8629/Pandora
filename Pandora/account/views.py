@@ -1,7 +1,10 @@
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import AbstractUser
+from django.http import HttpResponseForbidden, HttpResponseNotFound
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView
 from django.views.generic.base import View
 
@@ -28,15 +31,23 @@ class RegistrationView(View):
             context = {'form': form}
             return render(request, 'account/registration.html', context)
 
-class AccountDetailView(DetailView):
+
+class ProperUserMixin(object):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('articles:index_articles')
+        if not request.user.pk == kwargs['pk']:
+            return HttpResponseNotFound()
+        return super(ProperUserMixin, self).dispatch(request, *args, **kwargs)
+
+
+class AccountDetailView(ProperUserMixin, DetailView):
     model = Author
     template_name = "account/account.html"
 
     def get_context_data(self, **kwargs):
-        object = self.get_object()
-        context = {'object': object}
+        context = super().get_context_data(**kwargs)
         return context
-
 
 
 class CreateCategoryView(CreateView):
