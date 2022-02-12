@@ -1,5 +1,7 @@
 from django.db import models
 
+from account.models import Author
+
 
 class Category(models.Model):
     """Defining articles categories"""
@@ -23,6 +25,7 @@ class Articles(models.Model):
     image = models.ImageField(upload_to="photos/%Y/%m/%d/", verbose_name="Фото", blank=True)
     published = models.BooleanField(default=True, verbose_name="Опубликовано")
     category = models.ForeignKey(Category, on_delete=models.PROTECT, verbose_name="Категория")
+    author = models.ForeignKey(Author, on_delete=models.PROTECT, verbose_name="Автор")
 
     def __str__(self):
         return self.title

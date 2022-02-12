@@ -1,28 +1,42 @@
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import AbstractUser
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, DetailView
 from django.views.generic.base import View
 
 from articles.models import Category, Articles
+
+from .forms import CustomUserCreateForm
+from .models import Author
 
 
 class RegistrationView(View):
     @staticmethod
     def get(request, *args, **kwargs):
-        form = UserCreationForm()
+        form = CustomUserCreateForm()
         context = {'form': form}
         return render(request, 'account/registration.html', context)
 
     @staticmethod
     def post(request, *args, **kwargs):
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreateForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('account:login')
         else:
             context = {'form': form}
             return render(request, 'account/registration.html', context)
+
+class AccountDetailView(DetailView):
+    model = Author
+    template_name = "account/account.html"
+
+    def get_context_data(self, **kwargs):
+        object = self.get_object()
+        context = {'object': object}
+        return context
+
 
 
 class CreateCategoryView(CreateView):

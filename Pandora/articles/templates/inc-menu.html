@@ -1,27 +1,61 @@
+{% load static %}
 <div id="header">
-      <div id="logo">
+    <div id="logo">
         <div id="logo_text">
-          <!-- class="logo_colour", allows you to change the colour of the text -->
-          <h1><a href="{% url 'articles:index_articles' %}">intergalactic<span class="logo_colour">_entertainment</span></a></h1>
-          <h2>знания и навыки для успешной смены профессии и карьерного роста</h2>
+            <!-- class="logo_colour", allows you to change the colour of the text -->
+            <h1><a href="{% url 'articles:index_articles' %}">intergalactic<span
+                    class="logo_colour">_entertainment</span></a></h1>
+            <h2>знания и навыки для успешной смены профессии и карьерного роста</h2>
         </div>
-      </div>
-      <div id="menubar">
+    </div>
+    <div id="menubar">
         <ul id="menu">
-          <!-- put class="selected" in the li tag for the selected page - to highlight which page you're on -->
+            <!-- put class="selected" in the li tag for the selected page - to highlight which page you're on -->
 
             <li><a href="{% url 'articles:index_articles' %}">Главная</a></li>
 
             {% for el_categories in categories %}
-                <li>
-                    <a href="{% url 'articles:category_view' pk=el_categories.id %}">
-                        {{ el_categories.title }}
-                    </a>
-                </li>
+            <li>
+                <a href="{% url 'articles:category_view' pk=el_categories.id %}">
+                    {{ el_categories.title }}
+                </a>
+            </li>
             {% endfor %}
+
+
+            <div style="float: left;
+    margin-top: 6px;
+margin-left: 10px;">
+                <div class="dropdown">
+                      <a class="" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img class="" src="{% static 'img/user.png' %}" style="width: 25px;">
+                  </a>
+
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                      {% if request.user.is_authenticated %}
+                      <li><a class="dropdown-item menu_auth" href="{% url 'account:account' request.user.pk %}" style="      color: black;
+    background: white;">Личный кабинет: {{request.user.username}}</a></li>
+                                                                <li><a class="dropdown-item menu_auth" href="{% url 'account:logout' %}" style="      color: black;
+    background: white;">Выйти</a></li>
+                      {% else %}
+                                          <li><a class="dropdown-item menu_auth" href="{% url 'account:login' %}" style="      color: black;
+    background: white;">Войти</a></li>
+                    <li><a class="dropdown-item menu_auth" href="{% url 'account:registration' %}"style="      color: black;
+    background: white;">Зарегистрироваться</a></li>
+                      {% endif %}
+
+
+                  </ul>
+                </div>
+        </div>
+
         </ul>
-      </div>
+
+
+
     </div>
+
+</div>
 
 
 <script>
@@ -35,6 +69,7 @@
             console.log(nav_menu.children[i].firstElementChild.href)
             console.log(nav_menu.children[i].baseURI)
     }
+
 
 
 </script>
