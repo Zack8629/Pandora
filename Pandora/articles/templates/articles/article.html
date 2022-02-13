@@ -1,23 +1,19 @@
 {%extends "base.html" %}
 
 {% block body %}
-  <div id="main">
-
-    <div id="content_header"></div>
-    <div id="site_content">
+    <div id="main">
+        <div id="content_header"></div>
+        <div id="site_content">
 <!--      <div id="banner"></div>-->
-      {% include "inc-sidebar.html" %}
-      <div id="content">
-        <!-- insert the page content here -->
-
-        <h1>{{article.title}}</h1>
-        <h5>тематика:{{article.category}}</h5>
-        <h5>дата публикации:{{article.created_at}}</h5>
-        <h5>обновлено:{{article.updated_at}}</h5>
-        <p>{{article.content}}</p>
-
-      </div>
+        {% include "inc-sidebar.html" %}
+            <div id="content">
+            <!-- insert the page content here -->
+                <h1>{{article.title}}</h1>
+                <h5>тематика:{{article.category}}</h5>
+                <h5>дата публикации:{{article.created_at}}</h5>
+                <h5>обновлено:{{article.updated_at}}</h5>
+                <p>{{article.content}}</p>
+            </div>
+        </div>
     </div>
-    {% endblock %}
-
-  </div>
+{% endblock %}
