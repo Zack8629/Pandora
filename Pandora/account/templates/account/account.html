@@ -1,16 +1,13 @@
 {%extends "base.html" %}
 
 {% block body %}
-  <div id="main">
+    <div id="main">
 
-    <div id="content_header"></div>
-    <div id="site_content">
-<!--      <div id="banner"></div>-->
-        {% include "inc-sidebar.html" %}
-
-    {{object.username}}
-
-        {% endblock %}
-
-
-  </div>
+        <div id="content_header"></div>
+        <div id="site_content">
+    <!--      <div id="banner"></div>-->
+            {% include "inc-sidebar.html" %}
+        {{object.username}}
+        </div>
+    </div>
+{% endblock %}
