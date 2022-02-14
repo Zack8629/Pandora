@@ -11,7 +11,7 @@
                 <h1>{{selected_category}}</h1>
 
                 {% for item in articles %}
-                <a href="{% url 'articles:article_view' pk=item.id %}">
+                <a href="{% url 'articles:article_view' slug=item.slug %}">
                     <h4>{{item.title}}</h4>
                 </a>
                 <h5>дата публикации:{{item.created_at}}</h5>
