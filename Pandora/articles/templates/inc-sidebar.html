@@ -19,7 +19,7 @@
             <h3>Тематики</h3>
             <ul>
               {% for el_categories in categories %}
-                <li><a href="{% url 'articles:category_view' pk=el_categories.id %}">
+                <li><a href="{% url 'articles:category_view' slug=el_categories.slug %}">
                     {{ el_categories.title }}
                 </a></li>
               {% endfor %}
