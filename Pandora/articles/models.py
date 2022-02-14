@@ -13,6 +13,8 @@ def gen_slug(title, model_type=None):
         slug_field = ''.join(alphabet.get(c, c) for c in title.lower())
     return slugify(slug_field, allow_unicode=True)
 
+from account.models import Author
+
 
 class Category(models.Model):
     """Defining articles categories"""
@@ -43,6 +45,8 @@ class Articles(models.Model):
     published = models.BooleanField(default=True, verbose_name="Опубликовано")
     category = models.ForeignKey(Category, on_delete=models.PROTECT, verbose_name="Категория")
     slug = models.SlugField(unique=True)
+    author = models.ForeignKey(Author, on_delete=models.PROTECT, verbose_name="Автор")
+
 
     def __str__(self):
         return self.title

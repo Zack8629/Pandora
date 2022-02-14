@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-*e=nx1(1jjl@*v+4j$0x*2ktfd6&4$=_k2+mq_hq!j)=4-a6)b
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+AUTH_USER_MODEL = 'account.Author'
 
 # Application definition
 
@@ -119,7 +119,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
-
+STATICFILES_DIRS = [
+   os.path.join(BASE_DIR, "static"),
+]
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
