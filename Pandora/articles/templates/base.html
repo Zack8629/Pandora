@@ -14,10 +14,11 @@
         {% include "inc-style.html" %}
     </head>
     <body>
-        {% include "inc-menu.html" %}
+        <div class="wrapper">
+            {% include "inc-menu.html" %}
 
-        {% block body %}
-        {% endblock %}
+            {% block body %}
+            {% endblock %}
 
         {% include "inc-footer.html" %}
         {% block scripts %}
