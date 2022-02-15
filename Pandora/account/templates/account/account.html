@@ -20,6 +20,7 @@
         <h5>тематика: {{item.category}}</h5>
         <p>{{item.summary}}</p>
         {% endfor %}
+        <a href="{% url 'account:create_articles' %}">Создать статью</a>
     </div>
 </div>
 {% endblock %}
