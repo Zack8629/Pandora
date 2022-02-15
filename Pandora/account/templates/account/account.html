@@ -9,9 +9,9 @@
     <div id="site_content">
         <!--      <div id="banner"></div>-->
         {% include "inc-sidebar.html" %}
-        <h2>{{page_title}}</h2>
+        <h1>{{page_title}}</h1>
         <h3>Имя пользователя: {{object.username}}</h3>
-        <h2>{{articles}}</h2>
+        <h2>Статьи автора:</h2>
         {% for item in articles %}
         <a href="{% url 'articles:article_view' slug=item.slug %}">
             <h4>{{item.title}}</h4>
