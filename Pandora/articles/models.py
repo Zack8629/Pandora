@@ -38,6 +38,7 @@ class Category(models.Model):
 class Articles(models.Model):
     """We create articles with the necessary fields and categories"""
     title = models.CharField(max_length=150, db_index=True, verbose_name="Заголовки")
+    summary = models.TextField(verbose_name="Описание")
     content = models.TextField(verbose_name="Контент")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата редактирования")
