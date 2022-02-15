@@ -1,13 +1,25 @@
 {%extends "base.html" %}
 
 {% block body %}
-    <div id="main">
 
-        <div id="content_header"></div>
-        <div id="site_content">
-    <!--      <div id="banner"></div>-->
-            {% include "inc-sidebar.html" %}
-        {{object.username}}
-        </div>
+
+<div id="main">
+
+    <div id="content_header"></div>
+    <div id="site_content">
+        <!--      <div id="banner"></div>-->
+        {% include "inc-sidebar.html" %}
+        <h2>{{page_title}}</h2>
+        <h3>Имя пользователя: {{object.username}}</h3>
+        <h2>{{articles}}</h2>
+<!--        {% for item in articles %}-->
+<!--        <a href="{% url 'articles:article_view' slug=item.slug %}">-->
+<!--            <h4>{{item.title}}</h4>-->
+<!--        </a>-->
+<!--        <h5>дата публикации:{{item.created_at}}</h5>-->
+<!--        <h5>тематика: {{item.category}}</h5>-->
+<!--        <p>{{item.summary}}</p>-->
+<!--        {% endfor %}-->
     </div>
+</div>
 {% endblock %}

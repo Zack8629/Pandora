@@ -45,12 +45,15 @@ class ProperUserMixin(object):
 class AccountDetailView(ProperUserMixin, DetailView):
     model = Author
     template_name = "account/account.html"
+    # pk = self.kwargs['pk']
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page_title'] = 'Личный кабинет'
-        context['articles'] = get_all_articles()
+        # context['articles'] = Articles.objects.filter(author=pk)
         context['categories'] = get_all_categories()
+        # pk = self.kwargs['pk']
+        # print(pk)
         return context
 
 

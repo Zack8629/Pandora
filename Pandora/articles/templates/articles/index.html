@@ -13,7 +13,8 @@
                         <a href="{% url 'articles:article_view' slug=item.slug %}">
                             <h4>{{item.title}}</h4>
                         </a>
-                    <h5>дата публикации:{{item.created_at}}</h5>
+                    <h5>автор: {{item.author}}</h5>
+                    <h5>дата публикации: {{item.created_at}}</h5>
                     <h5>тематика: {{item.category}}</h5>
                     <p>{{item.summary}}</p>
                     {% endfor %}

@@ -36,7 +36,6 @@ def article_view(request, slug):
 class CategoryDetail(DetailView):
     model = Category
     template_name = 'articles/category_detail.html'
-    selected_category = get_all_categories().filter(id=1)
 
     def get_context_data(self, **kwargs):
         """Returns the data passed to the template"""

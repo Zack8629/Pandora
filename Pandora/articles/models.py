@@ -1,8 +1,10 @@
-from django.db import models
 from django.utils.text import slugify
 
 from .utils import alphabet
 from time import time
+
+from django.db import models
+from account.models import Author
 
 
 def gen_slug(title, model_type=None):
@@ -12,8 +14,6 @@ def gen_slug(title, model_type=None):
     else:
         slug_field = ''.join(alphabet.get(c, c) for c in title.lower())
     return slugify(slug_field, allow_unicode=True)
-
-from account.models import Author
 
 
 class Category(models.Model):
