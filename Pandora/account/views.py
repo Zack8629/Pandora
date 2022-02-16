@@ -62,6 +62,7 @@ class AccountDetailView(ContextDataMixin, ProperUserMixin, DetailView):
         pk = self.kwargs['pk']
         context = super().get_context_data(**kwargs)
         context['articles'] = Articles.objects.filter(author=pk)
+
         return context
 
 
@@ -74,7 +75,7 @@ class CreateCategoryView(CreateView):
 
 class CreateArticlesView(ContextDataMixin, CreateView):
     model = Articles
-    fields = ['title', 'content', 'category']
+    fields = ['title', 'content', 'category', 'author']
     template_name = 'account/articles_create_form.html'
     page_title = 'Создание статьи'
 

@@ -31,7 +31,7 @@ class Category(models.Model):
 
     class Meta:
         verbose_name = "Категория"
-        verbose_name_plural = "категории"
+        verbose_name_plural = "Категории"
         ordering = ["title"]
 
 
@@ -60,4 +60,22 @@ class Articles(models.Model):
     class Meta:
         verbose_name = "Статья"
         verbose_name_plural = "Статьи"
+        ordering = ["-created_at"]
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(Author, on_delete=models.CASCADE)
+    article = models.ForeignKey(Articles, on_delete=models.CASCADE, related_name='comments')
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='child_comments', null=True, blank=True)
+    is_child = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.id}. {self.user.username} - {self.article.title}'
+
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = "Комментарии"
         ordering = ["-created_at"]
