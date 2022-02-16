@@ -11,5 +11,7 @@ urlpatterns = [
     path('registration/', account.RegistrationView.as_view(), name='registration'),
     path('create_category/', account.CreateCategoryView.as_view(), name='create_category'),
     path('create_articles/', account.CreateArticlesView.as_view(), name='create_articles'),
-    path('<int:pk>/', account.AccountDetailView.as_view(), name='account')
+    path('<int:pk>/', account.AccountDetailView.as_view(), name='account'),
+    path('delete_article/<int:pk>/', account.DeleteArticlesView.as_view(), name='delete_article'),
+
 ]

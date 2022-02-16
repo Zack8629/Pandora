@@ -15,13 +15,13 @@
             <li><a href="{% url 'articles:index_articles' %}">Главная</a></li>
 
             {% for el_categories in categories %}
-            <li>
-                <a href="{% url 'articles:category_view' pk=el_categories.id %}">
-                    {{ el_categories.title }}
-                </a>
-            </li>
-            {% endfor %}
 
+                <li>
+                    <a href="{% url 'articles:category_view' slug=el_categories.slug %}">
+                        {{ el_categories.title }}
+                    </a>
+                </li>
+            {% endfor %}
 
             <div style="float: left;
     margin-top: 6px;
@@ -69,7 +69,4 @@ margin-left: 10px;">
             console.log(nav_menu.children[i].firstElementChild.href)
             console.log(nav_menu.children[i].baseURI)
     }
-
-
-
 </script>

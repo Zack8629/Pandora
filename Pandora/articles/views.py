@@ -22,8 +22,8 @@ def articles_all(request):
     return render(request, 'articles/index.html', context)
 
 
-def article_view(request, pk):
-    article = get_object_or_404(Articles, pk=pk)
+def article_view(request, slug):
+    article = get_object_or_404(Articles, slug=slug)
     context = {
         'page_title': 'Выбранная статья',
         'article': article,
@@ -36,13 +36,12 @@ def article_view(request, pk):
 class CategoryDetail(DetailView):
     model = Category
     template_name = 'articles/category_detail.html'
-    selected_category = get_all_categories().filter(id=1)
 
     def get_context_data(self, **kwargs):
         """Returns the data passed to the template"""
-        selected_category = Category.objects.get(id=self.kwargs['pk'])
+        selected_category = Category.objects.get(slug=self.kwargs['slug'])
         return {
-            "articles": Articles.objects.filter(category_id=self.kwargs['pk']),
+            "articles": Articles.objects.filter(category__slug=self.kwargs['slug']),
             "selected_category": selected_category.title,
             'categories': get_all_categories()
         }
