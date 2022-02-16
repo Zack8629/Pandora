@@ -35,7 +35,7 @@
                 <p class="help-block">{{ error }}</p>
               {% endfor %}
             </div>
-        <label for="{{ form.password1.id_for_label}}" class="sr-only">Password</label>
+        <label for="{{ form.password1.id_for_label}}" class="sr-only">Пароль</label>
           <div>{{ form.password1 }} </div>
                     <div class="{% if form.password1.errors %} invalid{% endif %}">
               {% for error in form.password1.errors %}
@@ -43,16 +43,16 @@
               {% endfor %}
             </div>
 
-                <label for="{{ form.password2.id_for_label}}" class="sr-only">Password</label>
+                <label for="{{ form.password2.id_for_label}}" class="sr-only">Повторите пароль</label>
           <div>{{ form.password2 }} </div>
                             <div class="{% if form.password2.errors %} invalid{% endif %}">
               {% for error in form.password2.errors %}
                 <p class="help-block">{{ error }}</p>
               {% endfor %}
             </div>
-          <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+          <button class="btn btn-lg btn-primary btn-block" type="submit">Зарегистрироваться</button>
         </form>
-
+    <a href="{% url 'articles:index_articles'%}">На главную</a>
 </div>
 
 {% endblock%}

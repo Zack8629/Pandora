@@ -6,10 +6,12 @@
         <div id="site_content">
 <!--      <div id="banner"></div>-->
         {% include "inc-sidebar.html" %}
+            <div id="right_content">
             <div id="content">
             <!-- insert the page content here -->
                 <h1>{{article.title}}</h1>
                 <h5>тематика:{{article.category}}</h5>
+                <h5>автор:{{article.author}}</h5>
                 <h5>дата публикации:{{article.created_at}}</h5>
                 <h5>обновлено:{{article.updated_at}}</h5>
                 <p>{{article.content}}</p>
@@ -60,6 +62,12 @@
                     {% endfor %}
                 {% endif %}
             </div>
+            {% if request.user == article.author %}
+                <a href="{% url 'account:delete_article' article.pk%}">Удалить</a>
+            {% endif %}
+            </div>
+
+
         </div>
     </div>
 
