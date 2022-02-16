@@ -13,7 +13,60 @@
                 <h5>дата публикации:{{article.created_at}}</h5>
                 <h5>обновлено:{{article.updated_at}}</h5>
                 <p>{{article.content}}</p>
+                <hr>
+                <div>
+                    {% if request.user.is_authenticated %}
+                        <form action="{% url 'articles:article_view' article.slug %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" id="commentParent" value="" name="parent">
+                            <h4>Комментарии:</h4>
+                            <div class="mb-2">
+                                <textarea class="form-control" rows="3" id="textComment" name="text" required='true'></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-outline-secondary btn-sm mb-3">Опубликовать</button>
+                        </form>
+                        
+                    {% else %}
+                        Чтобы оставлять комментарии необходимо <a href="{% url 'account:login' %}">авторизоваться</a>.
+                    {% endif %}
+                </div>
+                {% if article.comments %}
+                    {% for comment in article.comments.all %}
+                        {% if not comment.is_child %}
+
+                        <div class="card my-2">
+                            <h5 class="card-header"><span class="badge bg-secondary">{{ comment.user.username }}</span> | {{ comment.created_at }}</h5>
+                            <div class="card-body">
+                                <p class="card-text">{{ comment.text }}</p>
+                                {% if request.user.is_authenticated %}
+                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                        <a href="#commentParent" onclick="addComment('{{ comment.id }}', '{{ comment.user.username }}')" class="btn btn-outline-secondary btn-sm">Ответить</a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                            {% if comment.child_comments %}
+                                {% for child_comment in comment.child_comments.all %}
+                                    <div class="card my-2 ml-2" style="margin-left: 50px;">
+                                        <h5 class="card-header"><span class="badge bg-secondary">{{ comment.user.username }}</span> | {{ comment.created_at }}</h5>
+                                        <div class="card-body">
+                                            <h5 class="card-title">Ответ пользователю {{ comment.user.username }}</h5>
+                                            <p class="card-text">{{ child_comment.text }}</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
             </div>
         </div>
     </div>
+
+<script>
+    function addComment(id, username) {
+        $('#commentParent').val(id);
+        $('#textComment').text(`${username}, `)
+    }
+</script>
 {% endblock %}
