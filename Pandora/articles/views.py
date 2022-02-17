@@ -52,7 +52,7 @@ def article_view(request, slug):
 
 class CategoryDetail(DetailView):
     model = Category
-    template_name = 'articles/category_detail.html'
+    template_name = 'articles/index.html'
 
     def get_context_data(self, **kwargs):
         """Returns the data passed to the template"""
