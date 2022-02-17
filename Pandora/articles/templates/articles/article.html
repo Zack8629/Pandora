@@ -63,7 +63,8 @@
                 {% endif %}
             </div>
             {% if request.user == article.author %}
-                <a href="{% url 'account:delete_article' article.pk%}">Удалить</a>
+                <a href="{% url 'account:delete_article' article.slug%}">Удалить</a>
+                <a href="{% url 'account:update_article' article.slug%}">Редактировать</a>
             {% endif %}
             </div>
 

@@ -1,11 +1,12 @@
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import AbstractUser
+from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseForbidden, HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import CreateView, DetailView, DeleteView
+from django.views.generic import CreateView, DetailView, DeleteView, UpdateView
 from django.views.generic.base import View, TemplateView
 
 from articles.models import Category, Articles
@@ -73,11 +74,12 @@ class CreateCategoryView(CreateView):
     success_url = reverse_lazy('account:create_category')
 
 
-class CreateArticlesView(ContextDataMixin, CreateView):
+class CreateArticlesView(ContextDataMixin, SuccessMessageMixin, CreateView):
     model = Articles
-    fields = ['title', 'content', 'category', 'author']
+    fields = ['title', 'content', 'category']
     template_name = 'account/articles_create_form.html'
     page_title = 'Создание статьи'
+    success_message = 'Статья успешна создана'
 
     def get_success_url(self):
         return reverse_lazy('account:account', kwargs={'pk': self.request.user.pk})
@@ -95,12 +97,14 @@ class CreateArticlesView(ContextDataMixin, CreateView):
         return super(CreateArticlesView, self).dispatch(request, *args, **kwargs)
 
 
-
-class DeleteArticlesView(ContextDataMixin, DeleteView):
+class DeleteArticlesView(ContextDataMixin, SuccessMessageMixin, DeleteView):
     model = Articles
     template_name = 'account/post_delete.html'
-    success_url = reverse_lazy('articles:index_articles')
     page_title = 'Удаление статьи'
+    success_message = 'Статья успешна удалена'
+
+    def get_success_url(self):
+        return reverse_lazy('account:account', kwargs={'pk': self.request.user.pk})
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -110,3 +114,21 @@ class DeleteArticlesView(ContextDataMixin, DeleteView):
 
         return super(DeleteArticlesView, self).dispatch(request, *args, **kwargs)
 
+
+class UpdateArticlesView(ContextDataMixin, SuccessMessageMixin, UpdateView):
+    model = Articles
+    fields = ['title', 'content', 'category']
+    template_name = 'account/update_article.html'
+    page_title = 'Редактирование статьи'
+    success_message = 'Статья успешна изменена'
+
+    def get_success_url(self):
+        return self.request.META.get('HTTP_REFERER')
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('account:login')
+        if not request.user == self.get_object().author:
+            return HttpResponseNotFound()
+
+        return super(UpdateArticlesView, self).dispatch(request, *args, **kwargs)

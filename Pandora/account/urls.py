@@ -12,6 +12,7 @@ urlpatterns = [
     path('create_category/', account.CreateCategoryView.as_view(), name='create_category'),
     path('create_articles/', account.CreateArticlesView.as_view(), name='create_articles'),
     path('<int:pk>/', account.AccountDetailView.as_view(), name='account'),
-    path('delete_article/<int:pk>/', account.DeleteArticlesView.as_view(), name='delete_article'),
+    path('delete_article/<slug:slug>/', account.DeleteArticlesView.as_view(), name='delete_article'),
+    path('update_article/<slug:slug>/', account.UpdateArticlesView.as_view(), name='update_article'),
 
 ]
