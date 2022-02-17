@@ -4,24 +4,36 @@
     <div id="main">
         <div id="content_header"></div>
         <div id="site_content">
-<!--      <div id="banner"></div>-->
-        {% include "inc-sidebar.html" %}
+            <!--      <div id="banner"></div>-->
+            {% include "inc-sidebar.html" %}
             <div id="right_content">
-            <div id="content">
-            <!-- insert the page content here -->
-                <h1>{{article.title}}</h1>
-                <h5>тематика:{{article.category}}</h5>
-                <h5>автор:{{article.author}}</h5>
-                <h5>дата публикации:{{article.created_at}}</h5>
-                <h5>обновлено:{{article.updated_at}}</h5>
-                <p>{{article.content}}</p>
-                <hr>
-                <div>
-                    {% if request.user.is_authenticated %}
-                        <form action="{% url 'articles:article_view' article.slug %}" method="POST">
-                            {% csrf_token %}
-                            <input type="hidden" id="commentParent" value="" name="parent">
-                            <h4>Комментарии:</h4>
+                <div id="content">
+                    <!-- insert the page content here -->
+
+                    <hr>
+                    <div style="display:flex; flex-direction: row; justify-content: left; align-items: center">
+                        <img src="{{article.image.url}}" alt="" class="prod-size" style="width:150px;height:150px;">
+
+                        <ul>
+                            <li><h1>{{article.title}}</h1></li>
+                            <li>тематика:{{article.category}}</li>
+                            <li>автор:{{article.author}}</li>
+                            <li>дата публикации:{{article.created_at}}</li>
+                            <li>обновлено:{{article.updated_at}}</li>
+                            {% if request.user == article.author %}
+                                <li><a href="{% url 'account:delete_article' article.slug%}">Удалить</a>
+                                    <a href="{% url 'account:update_article' article.slug%}">Редактировать</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <p>{{article.content}}</p>
+
+                    <div>
+                        {% if request.user.is_authenticated %}
+                            <form action="{% url 'articles:article_view' article.slug %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" id="commentParent" value="" name="parent">
+                                <h4>Комментарии:</h4>
                             <div class="mb-2">
                                 <textarea class="form-control" rows="3" id="textComment" name="text" required='true'></textarea>
                             </div>
@@ -61,11 +73,9 @@
                         {% endif %}
                     {% endfor %}
                 {% endif %}
+
             </div>
-            {% if request.user == article.author %}
-                <a href="{% url 'account:delete_article' article.slug%}">Удалить</a>
-                <a href="{% url 'account:update_article' article.slug%}">Редактировать</a>
-            {% endif %}
+
             </div>
 
 

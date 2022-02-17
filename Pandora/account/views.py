@@ -76,7 +76,7 @@ class CreateCategoryView(CreateView):
 
 class CreateArticlesView(ContextDataMixin, SuccessMessageMixin, CreateView):
     model = Articles
-    fields = ['title', 'content', 'category']
+    fields = ['title', 'content', 'category', 'image']
     template_name = 'account/articles_create_form.html'
     page_title = 'Создание статьи'
     success_message = 'Статья успешна создана'
@@ -117,10 +117,10 @@ class DeleteArticlesView(ContextDataMixin, SuccessMessageMixin, DeleteView):
 
 class UpdateArticlesView(ContextDataMixin, SuccessMessageMixin, UpdateView):
     model = Articles
-    fields = ['title', 'content', 'category']
+    fields = ['title', 'content', 'category', 'image']
     template_name = 'account/update_article.html'
     page_title = 'Редактирование статьи'
-    success_message = 'Статья успешна изменена'
+    success_message = 'Статья успешно изменена'
 
     def get_success_url(self):
         return self.request.META.get('HTTP_REFERER')

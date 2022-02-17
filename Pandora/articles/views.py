@@ -16,9 +16,9 @@ def get_all_articles():
 
 def articles_all(request):
     context = {
-        'page_title': 'Все тексты',
-        'articles': get_all_articles(),
-        'categories': get_all_categories(),
+        'page_title': 'Все статьи',
+        'articles': Articles.objects.all(),
+        'categories': Category.objects.all(),
     }
 
     return render(request, 'articles/index.html', context)
