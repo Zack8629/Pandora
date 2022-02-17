@@ -1,0 +1,24 @@
+{%extends "base.html" %}
+
+{% block body %}
+
+
+<div id="main">
+
+    <div id="content_header"></div>
+    <div id="site_content">
+
+        {% include "inc-sidebar.html" %}
+        <div id="right_content">
+            <h1>{{page_title}}</h1>
+            <form method="post">{% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Save">
+            </form>
+
+        </div>
+
+
+    </div>
+</div>
+{% endblock %}

@@ -19,6 +19,16 @@
 <body>
     <div class="wrapper">
         {% include "inc-menu.html" %}
+        {% if messages %}
+        <ul class="messages">
+            <div class="alert alert-success" role="alert">
+            {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </div>
+
+        </ul>
+        {% endif %}
 
         {% block body %}
         {% endblock %}
