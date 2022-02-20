@@ -9,10 +9,7 @@ urlpatterns = [
     path('login/', LoginView.as_view(next_page='/'), name='login'),
     path('logout/', LogoutView.as_view(next_page='/'), name='logout'),
     path('registration/', account.RegistrationView.as_view(), name='registration'),
-    path('create_category/', account.CreateCategoryView.as_view(), name='create_category'),
-    path('create_articles/', account.CreateArticlesView.as_view(), name='create_articles'),
     path('<int:pk>/', account.AccountDetailView.as_view(), name='account'),
-    path('delete_article/<slug:slug>/', account.DeleteArticlesView.as_view(), name='delete_article'),
-    path('update_article/<slug:slug>/', account.UpdateArticlesView.as_view(), name='update_article'),
+
 
 ]

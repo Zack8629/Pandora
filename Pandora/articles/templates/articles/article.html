@@ -21,8 +21,8 @@
                             <li>дата публикации:{{article.created_at}}</li>
                             <li>обновлено:{{article.updated_at}}</li>
                             {% if request.user == article.author %}
-                                <li><a href="{% url 'account:delete_article' article.slug%}">Удалить</a>
-                                    <a href="{% url 'account:update_article' article.slug%}">Редактировать</a></li>
+                                <li><a href="{% url 'articles:delete_article' article.slug%}">Удалить</a>
+                                    <a href="{% url 'articles:update_article' article.slug%}">Редактировать</a></li>
                             {% endif %}
                         </ul>
                     </div>

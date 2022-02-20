@@ -9,7 +9,7 @@
 
     <div id="site_content">
         {% include "inc-sidebar.html" %}
-        <div id="right_content">
+        <div>
                 <form action="" method="post">{% csrf_token %}
                   <p>Вы уверены удалить статью "{{ object.title }}"?</p>
                   <button type="submit">Удалить</button>
