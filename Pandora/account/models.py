@@ -2,8 +2,6 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-# Create your models here.
-
 class Author(AbstractUser):
     email = models.EmailField(verbose_name='email', unique=True)
     about_me = models.TextField(verbose_name="обо мне", blank=True)
