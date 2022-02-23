@@ -52,7 +52,7 @@ class AccountDetailView(ContextDataMixin, ProperUserMixin, DetailView):
         return context
 
 
-class AccountUpdateView(ContextDataMixin, SuccessMessageMixin, UpdateView):
+class AccountUpdateView(ContextDataMixin, ProperUserMixin, SuccessMessageMixin, UpdateView):
     model = Author
     fields = ['username', 'first_name', 'last_name', 'email', 'about_me', 'birthday']
     template_name = 'account/update_account.html'
