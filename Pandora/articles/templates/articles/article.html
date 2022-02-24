@@ -16,10 +16,18 @@
 
                         <ul>
                             <li><h1>{{article.title}}</h1></li>
-                            <li>тематика:{{article.category}}</li>
-                            <li>автор:{{article.author}}</li>
-                            <li>дата публикации:{{article.created_at}}</li>
-                            <li>обновлено:{{article.updated_at}}</li>
+                            <li>тематика: {{article.category}}</li>
+                            <li>автор: {{article.author}}</li>
+                            <li>дата создания: {{article.created_at}}</li>
+                            <li>обновлено: {{article.updated_at}}</li>
+
+                            <li>опубликовано:
+                                {% if article.published == True %}
+                                    да
+                                {% else %}
+                                    нет
+                                {% endif %}
+                            </li>
                             {% if request.user == article.author %}
                                 <li><a href="{% url 'articles:delete_article' article.slug%}">Удалить</a>
                                     <a href="{% url 'articles:update_article' article.slug%}">Редактировать</a></li>

@@ -19,10 +19,10 @@
                             <li><a href="{% url 'articles:article_view' slug=item.slug %}">
                                 <h4>{{item.title}}</h4>
                             </a></li>
-                            <li>тематика:{{item.category}}</li>
-                            <li>автор:{{item.author}}</li>
-                            <li>дата публикации:{{item.created_at}}</li>
-                            <li>обновлено:{{item.updated_at}}</li>
+                            <li>тематика: {{item.category}}</li>
+                            <li>автор: {{item.author}}</li>
+                            <li>дата публикации: {{item.created_at}}</li>
+                            <li>обновлено: {{item.updated_at}}</li>
                         </ul>
                     </div>
                     <p>{{item.summary}}</p>

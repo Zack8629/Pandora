@@ -33,6 +33,14 @@ class ArticlesListView(ContextDataMixin, ListView):
     context_object_name = "articles"
     page_title = "Все статьи"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = get_all_categories()
+        context['articles'] = Articles.objects.filter(published=True)
+        if self.page_title is not None:
+            context['page_title'] = self.page_title
+        return context
+
 
 class ArticleDetailView(ContextDataMixin, DetailView):
     model = Articles
@@ -121,7 +129,7 @@ class DeleteArticlesView(ContextDataMixin, PermissionUserMixin, SuccessMessageMi
 
 class UpdateArticlesView(ContextDataMixin, PermissionUserMixin, SuccessMessageMixin, UpdateView):
     model = Articles
-    fields = ['title', 'content', 'category', 'summary', 'image']
+    fields = ['title', 'published', 'content', 'category', 'summary', 'image']
     template_name = 'articles/update_article.html'
     page_title = 'Редактирование статьи'
     success_message = 'Статья успешно изменена'
