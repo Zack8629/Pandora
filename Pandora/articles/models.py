@@ -48,7 +48,6 @@ class Articles(models.Model):
     slug = models.SlugField(unique=True)
     author = models.ForeignKey(Author, on_delete=models.PROTECT, verbose_name="Автор")
 
-
     def __str__(self):
         return self.title
 
@@ -69,7 +68,8 @@ class Comment(models.Model):
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='child_comments', null=True, blank=True)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='child_comments',
+                               null=True, blank=True)
     is_child = models.BooleanField(default=False)
 
     def __str__(self):

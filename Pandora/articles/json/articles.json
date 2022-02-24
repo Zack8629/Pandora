@@ -1,0 +1,101 @@
+[
+  {
+    "title": "Статья 1",
+    "summary": "краткое описание",
+    "content": "Сама статья очень очень большая статья!",
+    "image": "static/img/user.png",
+    "published": "True",
+    "category_id": "1",
+    "author_id": "1"
+  },
+  {
+    "title": "Статья 2",
+    "summary": "краткое описание",
+    "content": "Сама статья очень очень большая статья!",
+    "image": "static/img/user.png",
+    "published": "True",
+    "category_id": "1",
+    "author_id": "1"
+  },
+  {
+    "title": "Статья 3",
+    "summary": "краткое описание",
+    "content": "Сама статья очень очень большая статья!",
+    "image": "static/img/user.png",
+    "published": "True",
+    "category_id": "2",
+    "author_id": "2"
+  },
+  {
+    "title": "Статья 4",
+    "summary": "краткое описание",
+    "content": "Сама статья очень очень большая статья!",
+    "image": "static/img/user.png",
+    "published": "True",
+    "category_id": "2",
+    "author_id": "2"
+  },
+  {
+    "title": "Статья 5",
+    "summary": "краткое описание",
+    "content": "Сама статья очень очень большая статья!",
+    "image": "static/img/user.png",
+    "published": "True",
+    "category_id": "3",
+    "author_id": "3"
+  },
+  {
+    "title": "Статья 6",
+    "summary": "краткое описание",
+    "content": "Сама статья очень очень большая статья!",
+    "image": "static/img/user.png",
+    "published": "True",
+    "category_id": "3",
+    "author_id": "3"
+  },
+  {
+    "title": "Статья 7",
+    "summary": "краткое описание",
+    "content": "Сама статья очень очень большая статья!",
+    "image": "static/img/user.png",
+    "published": "True",
+    "category_id": "4",
+    "author_id": "4"
+  },
+  {
+    "title": "Статья 8",
+    "summary": "краткое описание",
+    "content": "Сама статья очень очень большая статья!",
+    "image": "static/img/user.png",
+    "published": "True",
+    "category_id": "4",
+    "author_id": "4"
+  },
+  {
+    "title": "Статья 9",
+    "summary": "краткое описание",
+    "content": "Сама статья очень очень большая статья!",
+    "image": "static/img/user.png",
+    "published": "True",
+    "category_id": "5",
+    "author_id": "5"
+  },
+  {
+    "title": "Статья 10",
+    "summary": "краткое описание",
+    "content": "Сама статья очень очень большая статья!",
+    "image": "static/img/user.png",
+    "published": "True",
+    "category_id": "5",
+    "author_id": "5"
+  },
+  {
+    "title": "Статья 11",
+    "summary": "краткое описание",
+    "content": "Сама статья очень очень большая статья!",
+    "image": "static/img/user.png",
+    "published": "True",
+    "category_id": "5",
+    "author_id": "5"
+  }
+]
