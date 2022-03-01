@@ -1,3 +1,4 @@
+from django.db.models import F
 from django.utils.text import slugify
 
 from .utils import alphabet
@@ -47,6 +48,29 @@ class Articles(models.Model):
     category = models.ForeignKey(Category, on_delete=models.PROTECT, verbose_name="Категория")
     slug = models.SlugField(unique=True)
     author = models.ForeignKey(Author, on_delete=models.PROTECT, verbose_name="Автор")
+    like = models.ManyToManyField(to=Author, related_name='like', blank=True)
+    dislike = models.ManyToManyField(to=Author, related_name='dislike', blank=True)
+    views = models.IntegerField(default=0, verbose_name='Просмотры')
+
+    def add_views(self):
+        self.views += 1
+        self.save(update_fields=['views'])
+
+    def get_list_user_likes(self):
+        list_username = [user.username for user in self.like.all()]
+        return list_username
+
+    def get_list_user_dislikes(self):
+        list_username = [user.username for user in self.dislike.all()]
+        return list_username
+
+    def get_likes(self):
+        likes = len(self.like.all())
+        return likes
+
+    def get_dislikes(self):
+        dislikes = len(self.dislike.all())
+        return dislikes
 
     def __str__(self):
         return self.title

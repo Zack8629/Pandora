@@ -20,6 +20,7 @@
                             <li>автор: {{article.author}}</li>
                             <li>дата создания: {{article.created_at}}</li>
                             <li>обновлено: {{article.updated_at}}</li>
+                            <li>просмотры: {{article.views}}</li>
 
                             <li>опубликовано:
                                 {% if article.published == True %}
@@ -36,6 +37,34 @@
                     </div>
                     <p>{{article.content}}</p>
 
+                    <div class="check_box">
+                        <div class="form-check">
+
+                        {% if request.user.username in list_user_likes %}
+                            <input class="form-check-input" type="checkbox" value="" id="like_box" checked>
+                         {% else %}
+
+                                <input class="form-check-input" type="checkbox" value="" id="like_box" {% if request.user.is_anonymous %} disabled="disabled"{% endif %}>
+
+                        {% endif%}
+
+                          <label class="form-check-label" for="flexCheckDefault">
+                            Like
+                          </label>&nbsp<span id="like_num">{{likes}}</span>
+                        </div>
+                        <div class="form-check">
+                            {% if request.user.username in list_user_dislikes %}
+                            <input class="form-check-input" type="checkbox" value="" id="dislike_box" checked>
+                             {% else %}
+                               <input class="form-check-input" type="checkbox" value="" id="dislike_box" {% if request.user.is_anonymous %} disabled="disabled"{% endif %}>
+                            {% endif%}
+
+
+                          <label class="form-check-label" for="flexCheckChecked">
+                            Dislike
+                          </label>&nbsp<span id="dislike_num">{{dislikes}}</span>
+                        </div>
+                          </div>
                     <div>
                         {% if request.user.is_authenticated %}
                             <form action="{% url 'articles:article_view' article.slug %}" method="POST">
@@ -89,11 +118,77 @@
 
         </div>
     </div>
+          <script
+          src="https://code.jquery.com/jquery-3.6.0.slim.js"
+          integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY="
+          crossorigin="anonymous">
+        </script>
 
 <script>
+
     function addComment(id, username) {
         $('#commentParent').val(id);
         $('#textComment').text(`${username}, `)
     }
+
+
+
+    $('.form-check-input').click(function(e){
+        var num_dislike = parseInt($('#dislike_num').html())
+        var num_like = parseInt($('#like_num').html())
+        console.log('click')
+
+
+        if(e['target']['id'] == 'like_box'){
+           if ( $('#like_box').prop('checked')){
+                var num_l = parseInt(num_like) + 1
+                $('#like_num').html(num_l)
+                if($('#dislike_box').prop('checked')){
+                    $('#dislike_box').prop('checked', false)
+                    var num_d = parseInt(num_dislike) - 1
+                    $('#dislike_num').html(num_d)
+                }
+
+
+            }else{
+                var num_l = parseInt(num_like) - 1
+                $('#like_num').html(num_l)
+            }
+        }
+
+        if(e['target']['id'] == 'dislike_box'){
+           if ( $('#dislike_box').prop('checked')){
+                var num_d = parseInt(num_dislike) + 1
+
+                $('#dislike_num').html(num_d)
+                if($('#like_box').prop('checked')){
+                    $('#like_box').prop('checked', false)
+                    var num_l = parseInt(num_like) - 1
+                    $('#like_num').html(num_l)
+                }
+
+
+            }else{
+                var num_d = parseInt(num_dislike) - 1
+                $('#dislike_num').html(num_d)
+            }
+
+        }
+        $.ajax({
+            type: "POST",
+            url: "{% url 'articles:rating_add' article.pk %}",
+            data: {'like': $('#like_box').prop('checked'), 'dislike': $('#dislike_box').prop('checked')},
+            headers:{"X-CSRFToken":"{{ csrf_token }}"},
+
+            success: function(data){
+                console.log(data)
+                console.log('ok')
+            }
+        })
+
+    })
+
+
 </script>
+
 {% endblock %}

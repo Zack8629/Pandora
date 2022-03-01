@@ -1,11 +1,12 @@
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, CreateView, DeleteView, UpdateView, ListView
 
 from .models import Articles, Category
 from .forms import CommentCreateForm
+from account.models import Author
 
 
 def get_all_categories():
@@ -65,6 +66,10 @@ class ArticleDetailView(ContextDataMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['list_user_likes'] = self.get_object().get_list_user_likes()
+        context['list_user_dislikes'] = self.get_object().get_list_user_dislikes()
+        context['likes'] = self.get_object().get_likes()
+        context['dislikes'] = self.get_object().get_dislikes()
         comment_form = CommentCreateForm()
         context['comment_form'] = comment_form
         return context
@@ -136,3 +141,29 @@ class UpdateArticlesView(ContextDataMixin, PermissionUserMixin, SuccessMessageMi
 
     def get_success_url(self):
         return reverse_lazy('articles:article_view', kwargs={'slug': self.get_object().slug})
+
+
+def rating_add(request, pk=None):
+    if request.method == 'POST':
+        likes = request.POST.get('like')
+        dislikes = request.POST.get('dislike')
+        user = Author.objects.get(username=request.user.username)
+        article = Articles.objects.get(pk=pk)
+
+        if dislikes == 'true':
+            article.like.remove(user)
+            article.dislike.add(user)
+        else:
+            article.dislike.remove(user)
+
+        if likes == 'true':
+            article.dislike.remove(user)
+            article.like.add(user)
+        else:
+            article.like.remove(user)
+
+        article.save()
+
+
+
+    return JsonResponse({'data': '123'})
