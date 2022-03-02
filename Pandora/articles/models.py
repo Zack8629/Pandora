@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.text import slugify
 
 from account.models import Author
+from tinymce.models import HTMLField
 from .utils import alphabet
 
 
@@ -56,9 +57,9 @@ class Rating:
 
 class Articles(models.Model, Rating):
     """We create articles with the necessary fields and categories"""
-    title = models.CharField(max_length=150, db_index=True, verbose_name="Заголовки")
+    title = models.CharField(max_length=150, db_index=True, verbose_name="Заголовок")
     summary = models.TextField(verbose_name="Описание")
-    content = models.TextField(verbose_name="Контент")
+    content = HTMLField(verbose_name="Контент")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата редактирования")
     image = models.ImageField(upload_to="photos/%Y/%m/%d/", verbose_name="Фото", blank=True)
