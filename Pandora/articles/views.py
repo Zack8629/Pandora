@@ -162,7 +162,6 @@ def rating_add(request, pk=None):
         else:
             article.like.remove(user)
 
-        article.save()
 
 
 
