@@ -1,18 +1,21 @@
-{#В настоящий момент этот файл нигде не используется#}
-
-
 {% extends "base.html" %}
 
 {% block body %}
     <div id="main">
         <div id="content_header"></div>
         <div id="site_content">
-            <!--      <div id="banner"></div>-->
             {% include "inc-sidebar.html" %}
-            <div id="content">
-                <!-- insert the page content here -->
-                <h1>{{ selected_category }}</h1>
+            <div>
+                <a href="{% url 'account:personal_data' request.user.pk %}">
+                    личные данные
+                </a>
+                <div></div>
+                <a href="{% url 'account:my_articles' request.user.pk %}">
+                    мои статьи
+                </a>
 
+                <h3><a href="{% url 'articles:create_articles' %}">Создать статью</a></h3>
+                <h2>Статьи автора:</h2>
                 {% for item in articles %}
                     <a href="{% url 'articles:article_view' slug=item.slug %}">
                         <h4>{{ item.title }}</h4>
@@ -22,6 +25,7 @@
                     <p>{{ item.summary }}</p>
                 {% endfor %}
             </div>
+            <!--      <div id="banner"></div>-->
         </div>
     </div>
 {% endblock %}
