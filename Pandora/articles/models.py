@@ -1,11 +1,10 @@
-from django.db.models import F
-from django.utils.text import slugify
-
-from .utils import alphabet
 from time import time
 
 from django.db import models
+from django.utils.text import slugify
+
 from account.models import Author
+from .utils import alphabet
 
 
 def gen_slug(title, model_type=None):
@@ -53,6 +52,7 @@ class Rating:
     def get_dislikes(self):
         dislikes = len(self.dislike.all())
         return dislikes
+
 
 class Articles(models.Model, Rating):
     """We create articles with the necessary fields and categories"""

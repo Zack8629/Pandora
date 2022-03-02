@@ -1,13 +1,12 @@
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import HttpResponseForbidden, HttpResponseNotFound, HttpResponseRedirect
+from django.http import HttpResponseNotFound
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, UpdateView
 from django.views.generic.base import View
 
 from articles.models import Articles
-from articles.views import ContextDataMixin, PermissionUserMixin
-
+from articles.views import ContextDataMixin
 from .forms import CustomUserCreateForm
 from .models import Author
 
@@ -39,10 +38,23 @@ class ProperUserMixin:
         return super(ProperUserMixin, self).dispatch(request, *args, **kwargs)
 
 
-class AccountDetailView(ContextDataMixin, ProperUserMixin, DetailView):
+class AccountPersonalData(ContextDataMixin, ProperUserMixin, DetailView):
     model = Author
-    template_name = "account/account.html"
+    template_name = "account/account_personal_data.html"
     page_title = 'Личный кабинет'
+
+    def get_context_data(self, **kwargs):
+        pk = self.kwargs['pk']
+        context = super().get_context_data(**kwargs)
+        context['articles'] = Articles.objects.filter(author=pk)
+
+        return context
+
+
+class AccountArticles(ContextDataMixin, ProperUserMixin, DetailView):
+    model = Author
+    template_name = "account/account_articles.html"
+    page_title = 'Личный кабинет - статьи'
 
     def get_context_data(self, **kwargs):
         pk = self.kwargs['pk']
