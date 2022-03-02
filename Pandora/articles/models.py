@@ -36,25 +36,7 @@ class Category(models.Model):
         ordering = ["title"]
 
 
-class Articles(models.Model):
-    """We create articles with the necessary fields and categories"""
-    title = models.CharField(max_length=150, db_index=True, verbose_name="Заголовки")
-    summary = models.TextField(verbose_name="Описание")
-    content = models.TextField(verbose_name="Контент")
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
-    updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата редактирования")
-    image = models.ImageField(upload_to="photos/%Y/%m/%d/", verbose_name="Фото", blank=True)
-    published = models.BooleanField(default=True, verbose_name="Опубликовано")
-    category = models.ForeignKey(Category, on_delete=models.PROTECT, verbose_name="Категория")
-    slug = models.SlugField(unique=True)
-    author = models.ForeignKey(Author, on_delete=models.PROTECT, verbose_name="Автор")
-    like = models.ManyToManyField(to=Author, related_name='like', blank=True)
-    dislike = models.ManyToManyField(to=Author, related_name='dislike', blank=True)
-    views = models.IntegerField(default=0, verbose_name='Просмотры')
-
-    def add_views(self):
-        self.views += 1
-        self.save(update_fields=['views'])
+class Rating:
 
     def get_list_user_likes(self):
         list_username = [user.username for user in self.like.all()]
@@ -72,6 +54,26 @@ class Articles(models.Model):
         dislikes = len(self.dislike.all())
         return dislikes
 
+class Articles(models.Model, Rating):
+    """We create articles with the necessary fields and categories"""
+    title = models.CharField(max_length=150, db_index=True, verbose_name="Заголовки")
+    summary = models.TextField(verbose_name="Описание")
+    content = models.TextField(verbose_name="Контент")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата редактирования")
+    image = models.ImageField(upload_to="photos/%Y/%m/%d/", verbose_name="Фото", blank=True)
+    published = models.BooleanField(default=True, verbose_name="Опубликовано")
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, verbose_name="Категория")
+    slug = models.SlugField(unique=True)
+    author = models.ForeignKey(Author, on_delete=models.PROTECT, verbose_name="Автор")
+    like = models.ManyToManyField(Author, related_name='like', blank=True)
+    dislike = models.ManyToManyField(Author, related_name='dislike', blank=True)
+    views = models.IntegerField(default=0, verbose_name='Просмотры')
+
+    def add_views(self):
+        self.views += 1
+        self.save(update_fields=['views'])
+
     def __str__(self):
         return self.title
 
@@ -86,7 +88,7 @@ class Articles(models.Model):
         ordering = ["-created_at"]
 
 
-class Comment(models.Model):
+class Comment(models.Model, Rating):
     user = models.ForeignKey(Author, on_delete=models.CASCADE)
     article = models.ForeignKey(Articles, on_delete=models.CASCADE, related_name='comments')
     text = models.TextField()
@@ -95,6 +97,8 @@ class Comment(models.Model):
     parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='child_comments',
                                null=True, blank=True)
     is_child = models.BooleanField(default=False)
+    like = models.ManyToManyField(Author, related_name='like_comment', blank=True)
+    dislike = models.ManyToManyField(Author, related_name='dislike_comment', blank=True)
 
     def __str__(self):
         return f'{self.id}. {self.user.username} - {self.article.title}'

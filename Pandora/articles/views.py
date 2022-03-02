@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, CreateView, DeleteView, UpdateView, ListView
 
-from .models import Articles, Category
+from .models import Articles, Category, Comment
 from .forms import CommentCreateForm
 from account.models import Author
 
@@ -66,10 +66,6 @@ class ArticleDetailView(ContextDataMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['list_user_likes'] = self.get_object().get_list_user_likes()
-        context['list_user_dislikes'] = self.get_object().get_list_user_dislikes()
-        context['likes'] = self.get_object().get_likes()
-        context['dislikes'] = self.get_object().get_dislikes()
         comment_form = CommentCreateForm()
         context['comment_form'] = comment_form
         return context
@@ -143,6 +139,19 @@ class UpdateArticlesView(ContextDataMixin, PermissionUserMixin, SuccessMessageMi
         return reverse_lazy('articles:article_view', kwargs={'slug': self.get_object().slug})
 
 
+def like_dislike_rating(obj, user,likes, dislikes):
+    if dislikes == 'true':
+        obj.like.remove(user)
+        obj.dislike.add(user)
+    else:
+        obj.dislike.remove(user)
+
+    if likes == 'true':
+        obj.dislike.remove(user)
+        obj.like.add(user)
+    else:
+        obj.like.remove(user)
+
 def rating_add(request, pk=None):
     if request.method == 'POST':
         likes = request.POST.get('like')
@@ -150,16 +159,18 @@ def rating_add(request, pk=None):
         user = Author.objects.get(username=request.user.username)
         article = Articles.objects.get(pk=pk)
 
-        if dislikes == 'true':
-            article.like.remove(user)
-            article.dislike.add(user)
-        else:
-            article.dislike.remove(user)
+        like_dislike_rating(article, user, likes, dislikes)
 
-        if likes == 'true':
-            article.dislike.remove(user)
-            article.like.add(user)
-        else:
-            article.like.remove(user)
+    return JsonResponse({})
+
+
+def comment_rating_add(request, pk=None):
+    if request.method == 'POST':
+        likes = request.POST.get('like')
+        dislikes = request.POST.get('dislike')
+        user = Author.objects.get(username=request.user.username)
+        comment = Comment.objects.get(pk=pk)
+
+        like_dislike_rating(comment, user, likes, dislikes)
 
     return JsonResponse({})
