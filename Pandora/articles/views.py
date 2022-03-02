@@ -162,7 +162,4 @@ def rating_add(request, pk=None):
         else:
             article.like.remove(user)
 
-
-
-
-    return JsonResponse({'data': '123'})
+    return JsonResponse({})
