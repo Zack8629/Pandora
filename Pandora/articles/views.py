@@ -1,12 +1,12 @@
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, CreateView, DeleteView, UpdateView, ListView
 
-from .models import Articles, Category, Comment
-from .forms import CommentCreateForm
 from account.models import Author
+from .forms import CommentCreateForm
+from .models import Articles, Category, Comment
 
 
 def get_all_categories():
@@ -139,7 +139,7 @@ class UpdateArticlesView(ContextDataMixin, PermissionUserMixin, SuccessMessageMi
         return reverse_lazy('articles:article_view', kwargs={'slug': self.get_object().slug})
 
 
-def like_dislike_rating(obj, user,likes, dislikes):
+def like_dislike_rating(obj, user, likes, dislikes):
     if dislikes == 'true':
         obj.like.remove(user)
         obj.dislike.add(user)
@@ -151,6 +151,7 @@ def like_dislike_rating(obj, user,likes, dislikes):
         obj.like.add(user)
     else:
         obj.like.remove(user)
+
 
 def rating_add(request, pk=None):
     if request.method == 'POST':

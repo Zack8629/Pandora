@@ -1,4 +1,4 @@
-{%extends "base.html" %}
+{% extends "base.html" %}
 
 {% block body %}
     <div id="main">
@@ -13,20 +13,21 @@
                 {% for item in articles %}
 
                     <div style="display:flex; flex-direction: row; justify-content: flex-start; align-items: center">
-                        <img src="{{item.image.url}}" alt="" class="prod-size" style="width:100px;height:100px;">
+                        <img src="{{ item.image.url }}" alt="" class="prod-size"
+                             style="width:100px;height:100px;">
 
                         <ul>
                             <li><a href="{% url 'articles:article_view' slug=item.slug %}">
-                                <h4>{{item.title}}</h4>
+                                <h4>{{ item.title }}</h4>
                             </a></li>
-                            <li>тематика: {{item.category}}</li>
-                            <li>автор: {{item.author}}</li>
-                            <li>дата публикации: {{item.created_at}}</li>
-                            <li>обновлено: {{item.updated_at}}</li>
-                            <li>просмотры: {{item.views}}</li>
+                            <li>тематика: {{ item.category }}</li>
+                            <li>автор: {{ item.author }}</li>
+                            <li>дата публикации: {{ item.created_at }}</li>
+                            <li>обновлено: {{ item.updated_at }}</li>
+                            <li>просмотры: {{ item.views }}</li>
                         </ul>
                     </div>
-                    <p>{{item.summary}}</p>
+                    <p>{{ item.summary }}</p>
 
                     <hr>
                 {% endfor %}

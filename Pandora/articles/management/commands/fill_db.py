@@ -16,7 +16,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if not Author.objects.filter(username='admin').exists():
-            Author.objects.create_superuser('admin', 'admin@no.local', 'admin')
+            Author.objects.create_superuser('admin', 'admin@mail.local', 'admin')
 
         num_users = 5
         for i in range(num_users):

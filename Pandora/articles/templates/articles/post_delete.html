@@ -1,25 +1,25 @@
-{%extends "base.html" %}
+{% extends "base.html" %}
 
 {% block body %}
 
 
-<div id="main">
+    <div id="main">
 
-    <div id="content_header"></div>
+        <div id="content_header"></div>
 
-    <div id="site_content">
-        {% include "inc-sidebar.html" %}
-        <div>
+        <div id="site_content">
+            {% include "inc-sidebar.html" %}
+            <div>
                 <form action="" method="post">{% csrf_token %}
-                  <p>Вы уверены удалить статью "{{ object.title }}"?</p>
-                  <button type="submit">Удалить</button>
+                    <p>Вы уверены удалить статью "{{ object.title }}"?</p>
+                    <button type="submit">Удалить</button>
                 </form>
 
             </div>
 
-        <!--      <div id="banner"></div>-->
+            <!--      <div id="banner"></div>-->
 
 
+        </div>
     </div>
-</div>
 {% endblock %}
