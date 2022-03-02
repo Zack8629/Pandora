@@ -12,4 +12,5 @@ urlpatterns = [
     path('article/delete_article/<slug:slug>/', articles.DeleteArticlesView.as_view(), name='delete_article'),
     path('article/update_article/<slug:slug>/', articles.UpdateArticlesView.as_view(), name='update_article'),
     path('article/rating/<int:pk>/', articles.rating_add, name='rating_add'),
+    path('article/comment_rating/<int:pk>/', articles.comment_rating_add, name='comment_rating_add'),
 ]
