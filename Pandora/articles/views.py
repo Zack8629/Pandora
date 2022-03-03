@@ -79,7 +79,7 @@ class CategoryDetail(DetailView):
         """Returns the data passed to the template"""
         selected_category = self.get_object()
         return {
-            "articles": Articles.objects.filter(category__slug=self.kwargs['slug']),
+            "articles": Articles.objects.filter(category__slug=self.kwargs['slug'], published=True),
             "selected_category": selected_category.title,
             'categories': get_all_categories()
         }
