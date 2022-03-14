@@ -7,5 +7,3 @@ class CommentCreateForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['text']
-
-

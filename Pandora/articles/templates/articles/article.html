@@ -1,4 +1,4 @@
-{%extends "base.html" %}
+{% extends "base.html" %}
 
 {% block body %}
     <div id="main">
@@ -12,15 +12,16 @@
 
                     <hr>
                     <div style="display:flex; flex-direction: row; justify-content: left; align-items: center">
-                        <img src="{{article.image.url}}" alt="" class="prod-size" style="width:150px;height:150px;">
+                        <img src="{{ article.image.url }}" alt="" class="prod-size"
+                             style="width:150px;height:150px;">
 
                         <ul>
-                            <li><h1>{{article.title}}</h1></li>
-                            <li>тематика: {{article.category}}</li>
-                            <li>автор: {{article.author}}</li>
-                            <li>дата создания: {{article.created_at}}</li>
-                            <li>обновлено: {{article.updated_at}}</li>
-                            <li>просмотры: {{article.views}}</li>
+                            <li><h1>{{ article.title }}</h1></li>
+                            <li>тематика: {{ article.category }}</li>
+                            <li>автор: {{ article.author }}</li>
+                            <li>дата создания: {{ article.created_at }}</li>
+                            <li>обновлено: {{ article.updated_at }}</li>
+                            <li>просмотры: {{ article.views }}</li>
 
                             <li>опубликовано:
                                 {% if article.published == True %}
@@ -30,275 +31,345 @@
                                 {% endif %}
                             </li>
                             {% if request.user == article.author %}
-                                <li><a href="{% url 'articles:delete_article' article.slug%}">Удалить</a>
-                                    <a href="{% url 'articles:update_article' article.slug%}">Редактировать</a></li>
+                                <li>
+                                    <a href="{% url 'articles:delete_article' article.slug %}">
+                                        Удалить
+                                    </a>
+                                    <a href="{% url 'articles:update_article' article.slug %}">
+                                        Редактировать
+                                    </a>
+                                </li>
                             {% endif %}
                         </ul>
                     </div>
-                    <p>{{article.content}}</p>
+                    <p>{{ article.content }}</p>
 
                     <div class="check_box" style="display: inline-block; margin-bottom: 10px;">
                         <div class="form-check" style="float: left;">
 
-                        {% if request.user.username in article.get_list_user_likes %}
-                            <input class=" check-like-input article_rating" type="checkbox" value="" id="like_box" checked>
-                         {% else %}
+                            {% if request.user.username in article.get_list_user_likes %}
+                                <input class=" check-like-input article_rating" type="checkbox"
+                                       value="" id="like_box" checked>
+                            {% else %}
 
-                                <input class="check-like-input article_rating" type="checkbox" value="" id="like_box" {% if request.user.is_anonymous %} disabled="disabled"{% endif %}>
+                                <input class="check-like-input article_rating" type="checkbox"
+                                       value="" id="like_box" {% if request.user.is_anonymous %}
+                                       disabled="disabled"{% endif %}>
 
-                        {% endif%}
+                            {% endif %}
 
-                          <label class="form-check-label" for="flexCheckDefault">
-                          </label><span style="font-size: 15px;"  id="like_num">{{article.get_likes}}</span>
+                            <label class="form-check-label" for="flexCheckDefault">
+                            </label><span style="font-size: 15px;"
+                                          id="like_num">{{ article.get_likes }}</span>
                         </div>
                         <div class="form-check" style="float: left;">
                             {% if request.user.username in article.get_list_user_dislikes %}
-                            <input class="rotate_img check-like-input article_rating" type="checkbox" value="" id="dislike_box" checked>
-                             {% else %}
-                               <input class="rotate_img check-like-input article_rating" type="checkbox" value="" id="dislike_box" {% if request.user.is_anonymous %} disabled="disabled"{% endif %}>
-                            {% endif%}
+                                <input class="rotate_img check-like-input article_rating"
+                                       type="checkbox" value="" id="dislike_box" checked>
+                            {% else %}
+                                <input class="rotate_img check-like-input article_rating"
+                                       type="checkbox" value="" id="dislike_box"
+                                        {% if request.user.is_anonymous %}
+                                       disabled="disabled"{% endif %}>
+                            {% endif %}
 
 
-                          <label class="form-check-label" for="flexCheckChecked">
-                          </label><span style="font-size: 15px;" id="dislike_num">{{article.get_dislikes}}</span>
+                            <label class="form-check-label" for="flexCheckChecked">
+                            </label><span style="font-size: 15px;"
+                                          id="dislike_num">{{ article.get_dislikes }}</span>
                         </div>
-                          </div>
+                    </div>
                     <div>
                         {% if request.user.is_authenticated %}
-                            <form action="{% url 'articles:article_view' article.slug %}" method="POST">
+                            <form action="{% url 'articles:article_view' article.slug %}"
+                                  method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" id="commentParent" value="" name="parent">
                                 <h4>Комментарии:</h4>
-                            <div class="mb-2">
-                                <textarea class="form-control" rows="3" id="textComment" name="text" required='true'></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-outline-secondary btn-sm mb-3">Опубликовать</button>
-                        </form>
+                                <div class="mb-2">
+                                    <textarea class="form-control" rows="3" id="textComment"
+                                              name="text" required='true'></textarea>
+                                </div>
+                                <button type="submit"
+                                        class="btn btn-outline-secondary btn-sm mb-3">Опубликовать
+                                </button>
+                            </form>
 
-                    {% else %}
-                        Чтобы оставлять комментарии необходимо <a href="{% url 'account:login' %}">авторизоваться</a>.
-                    {% endif %}
-                </div>
-                {% if article.comments %}
-                    {% for comment in article.comments.all %}
-                        {% if not comment.is_child %}
-
-                        <div class="card my-2">
-                            <h5 class="card-header"><span class="badge bg-secondary">{{ comment.user.username }}</span> | {{ comment.created_at }}
-                            <div class="check_box" style="display: inline-block; margin-bottom: 10px;">
-                        <div class="form-check" style="float: left;">
-
-                        {% if request.user.username in comment.get_list_user_likes %}
-                            <input class="check-like-input comment_rating" type="checkbox" value="" id="like_box_{{comment.id}}" checked>
-                         {% else %}
-
-                                <input class="check-like-input comment_rating" type="checkbox" value="" id="like_box_{{comment.id}}" {% if request.user.is_anonymous %} disabled="disabled"{% endif %}>
-
-                        {% endif%}
-
-                          <label class="form-check-label" for="flexCheckDefault">
-                          </label><span style="font-size: 15px;"  id="like_num_{{comment.id}}">{{comment.get_likes}}</span>
-                        </div>
-                        <div class="form-check" style="float: left;">
-                            {% if request.user.username in comment.get_list_user_dislikes %}
-                            <input class="rotate_img check-like-input comment_rating" type="checkbox" value="" id="dislike_box_{{comment.id}}" checked>
-                             {% else %}
-                               <input class="rotate_img check-like-input comment_rating" type="checkbox" value="" id="dislike_box_{{comment.id}}" {% if request.user.is_anonymous %} disabled="disabled"{% endif %}>
-                            {% endif%}
-
-
-                          <label class="form-check-label" for="flexCheckChecked">
-                          </label><span style="font-size: 15px;" id="dislike_num_{{comment.id}}">{{comment.get_dislikes}}</span>
-                        </div>
-                          </div>
-                            </h5>
-                            <div class="card-body">
-                                <p class="card-text">{{ comment.text }}</p>
-                                {% if request.user.is_authenticated %}
-                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                        <a href="#commentParent" onclick="addComment('{{ comment.id }}', '{{ comment.user.username }}')" class="btn btn-outline-secondary btn-sm">Ответить</a>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                            {% if comment.child_comments %}
-                                {% for child_comment in comment.child_comments.all %}
-                                    <div class="card my-2 ml-2" style="margin-left: 50px;">
-                                        <h5 class="card-header"><span class="badge bg-secondary">{{ comment.user.username }}</span> | {{ comment.created_at }}
-                                         <div class="check_box" style="display: inline-block; margin-bottom: 10px;">
-                        <div class="form-check" style="float: left;">
-
-                        {% if request.user.username in child_comment.get_list_user_likes %}
-                            <input class="check-like-input comment_rating" type="checkbox" value="" id="like_box_{{child_comment.id}}" checked>
-                         {% else %}
-
-                                <input class="check-like-input comment_rating" type="checkbox" value="" id="like_box_{{child_comment.id}}" {% if request.user.is_anonymous %} disabled="disabled"{% endif %}>
-
-                        {% endif%}
-
-                          <label class="form-check-label" for="flexCheckDefault">
-                          </label><span style="font-size: 15px;"  id="like_num_{{child_comment.id}}">{{child_comment.get_likes}}</span>
-                        </div>
-                        <div class="form-check" style="float: left;">
-                            {% if request.user.username in child_comment.get_list_user_dislikes %}
-                            <input class="rotate_img check-like-input comment_rating" type="checkbox" value="" id="dislike_box_{{child_comment.id}}" checked>
-                             {% else %}
-                               <input class="rotate_img check-like-input comment_rating" type="checkbox" value="" id="dislike_box_{{child_comment.id}}" {% if request.user.is_anonymous %} disabled="disabled"{% endif %}>
-                            {% endif%}
-
-
-                          <label class="form-check-label" for="flexCheckChecked">
-                          </label><span style="font-size: 15px;" id="dislike_num_{{child_comment.id}}">{{child_comment.get_dislikes}}</span>
-                        </div>
-                          </div></h5>
-                                        <div class="card-body">
-                                            <h5 class="card-title">Ответ пользователю {{ comment.user.username }}
-
-                                            </h5>
-                                            <p class="card-text">{{ child_comment.text }}</p>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            {% endif %}
+                        {% else %}
+                            Чтобы оставлять комментарии необходимо
+                            <a href="{% url 'account:login' %}">авторизоваться</a>.
                         {% endif %}
-                    {% endfor %}
-                {% endif %}
+                    </div>
+                    {% if article.comments %}
+                        {% for comment in article.comments.all %}
+                            {% if not comment.is_child %}
 
-            </div>
+                                <div class="card my-2">
+                                    <h5 class="card-header"><span
+                                            class="badge bg-secondary">{{ comment.user.username }}</span>
+                                        | {{ comment.created_at }}
+                                        <div class="check_box"
+                                             style="display: inline-block; margin-bottom: 10px;">
+                                            <div class="form-check" style="float: left;">
+
+                                                {% if request.user.username in comment.get_list_user_likes %}
+                                                    <input class="check-like-input comment_rating"
+                                                           type="checkbox" value=""
+                                                           id="like_box_{{ comment.id }}" checked>
+                                                {% else %}
+
+                                                    <input class="check-like-input comment_rating"
+                                                           type="checkbox" value=""
+                                                           id="like_box_{{ comment.id }}"
+                                                            {% if request.user.is_anonymous %}
+                                                           disabled="disabled"{% endif %}>
+
+                                                {% endif %}
+
+                                                <label class="form-check-label"
+                                                       for="flexCheckDefault">
+                                                </label><span style="font-size: 15px;"
+                                                              id="like_num_{{ comment.id }}">{{ comment.get_likes }}</span>
+                                            </div>
+                                            <div class="form-check" style="float: left;">
+                                                {% if request.user.username in comment.get_list_user_dislikes %}
+                                                    <input class="rotate_img check-like-input comment_rating"
+                                                           type="checkbox" value=""
+                                                           id="dislike_box_{{ comment.id }}"
+                                                           checked>
+                                                {% else %}
+                                                    <input class="rotate_img check-like-input comment_rating"
+                                                           type="checkbox" value=""
+                                                           id="dislike_box_{{ comment.id }}"
+                                                            {% if request.user.is_anonymous %}
+                                                           disabled="disabled"{% endif %}>
+                                                {% endif %}
+
+
+                                                <label class="form-check-label"
+                                                       for="flexCheckChecked">
+                                                </label><span style="font-size: 15px;"
+                                                              id="dislike_num_{{ comment.id }}">{{ comment.get_dislikes }}</span>
+                                            </div>
+                                        </div>
+                                    </h5>
+                                    <div class="card-body">
+                                        <p class="card-text">{{ comment.text }}</p>
+                                        {% if request.user.is_authenticated %}
+                                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                                <a href="#commentParent"
+                                                   onclick="addComment('{{ comment.id }}', '{{ comment.user.username }}')"
+                                                   class="btn btn-outline-secondary btn-sm">Ответить</a>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if comment.child_comments %}
+                                    {% for child_comment in comment.child_comments.all %}
+                                        <div class="card my-2 ml-2" style="margin-left: 50px;">
+                                            <h5 class="card-header"><span
+                                                    class="badge bg-secondary">{{ comment.user.username }}</span>
+                                                | {{ comment.created_at }}
+                                                <div class="check_box"
+                                                     style="display: inline-block; margin-bottom: 10px;">
+                                                    <div class="form-check" style="float: left;">
+
+                                                        {% if request.user.username in child_comment.get_list_user_likes %}
+                                                            <input class="check-like-input comment_rating"
+                                                                   type="checkbox" value=""
+                                                                   id="like_box_{{ child_comment.id }}"
+                                                                   checked>
+                                                        {% else %}
+
+                                                            <input class="check-like-input comment_rating"
+                                                                   type="checkbox" value=""
+                                                                   id="like_box_{{ child_comment.id }}"
+                                                                    {% if request.user.is_anonymous %}
+                                                                   disabled="disabled"{% endif %}>
+
+                                                        {% endif %}
+
+                                                        <label class="form-check-label"
+                                                               for="flexCheckDefault">
+                                                        </label><span style="font-size: 15px;"
+                                                                      id="like_num_{{ child_comment.id }}">{{ child_comment.get_likes }}</span>
+                                                    </div>
+                                                    <div class="form-check" style="float: left;">
+                                                        {% if request.user.username in child_comment.get_list_user_dislikes %}
+                                                            <input class="rotate_img check-like-input comment_rating"
+                                                                   type="checkbox" value=""
+                                                                   id="dislike_box_{{ child_comment.id }}"
+                                                                   checked>
+                                                        {% else %}
+                                                            <input class="rotate_img check-like-input comment_rating"
+                                                                   type="checkbox" value=""
+                                                                   id="dislike_box_{{ child_comment.id }}"
+                                                                    {% if request.user.is_anonymous %}
+                                                                   disabled="disabled"{% endif %}>
+                                                        {% endif %}
+
+
+                                                        <label class="form-check-label"
+                                                               for="flexCheckChecked">
+                                                        </label><span style="font-size: 15px;"
+                                                                      id="dislike_num_{{ child_comment.id }}">{{ child_comment.get_dislikes }}</span>
+                                                    </div>
+                                                </div>
+                                            </h5>
+                                            <div class="card-body">
+                                                <h5 class="card-title">Ответ
+                                                    пользователю {{ comment.user.username }}
+
+                                                </h5>
+                                                <p class="card-text">{{ child_comment.text }}</p>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+
+                </div>
 
             </div>
 
 
         </div>
     </div>
-          <script
-          src="https://code.jquery.com/jquery-3.6.0.slim.js"
-          integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY="
-          crossorigin="anonymous">
-        </script>
+    <script
+            src="https://code.jquery.com/jquery-3.6.0.slim.js"
+            integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY="
+            crossorigin="anonymous">
+    </script>
 
-<script>
+    <script>
 
-    function addComment(id, username) {
-        $('#commentParent').val(id);
-        $('#textComment').text(`${username}, `)
-    }
+        function addComment(id, username) {
+            $('#commentParent').val(id);
+            $('#textComment').text(`${username}, `)
+        }
 
-    $('.comment_rating').click(function(e){
-        var comment = $(this).attr('id')
-        var id_comment = comment.split('_')[2]
+        $('.comment_rating').click(function (e) {
+             let comment = $(this).attr('id')
+             let id_comment = comment.split('_')[2]
 
-        var num_dislike = parseInt($(`#dislike_num_${id_comment}`).html())
-        var num_like = parseInt($(`#like_num_${id_comment}`).html())
-        console.log(num_like, num_dislike)
+             let num_dislike = parseInt($(`#dislike_num_${id_comment}`).html())
+             let num_like = parseInt($(`#like_num_${id_comment}`).html())
+            console.log(num_like, num_dislike)
 
 
-        if(e['target']['id'] == `like_box_${id_comment}`){
-           if ( $(`#like_box_${id_comment}`).prop('checked')){
-                var num_l = parseInt(num_like) + 1
-                $(`#like_num_${id_comment}`).html(num_l)
-                if($(`#dislike_box_${id_comment}`).prop('checked')){
-                    $(`#dislike_box_${id_comment}`).prop('checked', false)
-                    var num_d = parseInt(num_dislike) - 1
+            if (e['target']['id'] == `like_box_${id_comment}`) {
+                if ($(`#like_box_${id_comment}`).prop('checked')) {
+                     let num_l = parseInt(num_like) + 1
+                    $(`#like_num_${id_comment}`).html(num_l)
+                    if ($(`#dislike_box_${id_comment}`).prop('checked')) {
+                        $(`#dislike_box_${id_comment}`).prop('checked', false)
+                         let num_d = parseInt(num_dislike) - 1
+                        $(`#dislike_num_${id_comment}`).html(num_d)
+                    }
+
+
+                } else {
+                     let num_l = parseInt(num_like) - 1
+                    $(`#like_num_${id_comment}`).html(num_l)
+                }
+            }
+
+            if (e['target']['id'] == `dislike_box_${id_comment}`) {
+                if ($(`#dislike_box_${id_comment}`).prop('checked')) {
+                     let num_d = parseInt(num_dislike) + 1
+
+                    $(`#dislike_num_${id_comment}`).html(num_d)
+                    if ($(`#like_box_${id_comment}`).prop('checked')) {
+                        $(`#like_box_${id_comment}`).prop('checked', false)
+                         let num_l = parseInt(num_like) - 1
+                        $(`#like_num_${id_comment}`).html(num_l)
+                    }
+
+
+                } else {
+                     let num_d = parseInt(num_dislike) - 1
                     $(`#dislike_num_${id_comment}`).html(num_d)
                 }
 
-
-            }else{
-                var num_l = parseInt(num_like) - 1
-                $(`#like_num_${id_comment}`).html(num_l)
             }
-        }
 
-        if(e['target']['id'] == `dislike_box_${id_comment}`){
-           if ( $(`#dislike_box_${id_comment}`).prop('checked')){
-                var num_d = parseInt(num_dislike) + 1
+            $.ajax({
+                type: "POST",
+                url: `/article/comment_rating/${id_comment}/`,
+                data: {
+                    'like': $(`#like_box_${id_comment}`).prop('checked'),
+                    'dislike': $(`#dislike_box_${id_comment}`).prop('checked')
+                },
+                headers: {"X-CSRFToken": "{{ csrf_token }}"},
 
-                $(`#dislike_num_${id_comment}`).html(num_d)
-                if($(`#like_box_${id_comment}`).prop('checked')){
-                    $(`#like_box_${id_comment}`).prop('checked', false)
-                    var num_l = parseInt(num_like) - 1
-                    $(`#like_num_${id_comment}`).html(num_l)
+                success: function (data) {
+
                 }
+            })
 
 
-            }else{
-                var num_d = parseInt(num_dislike) - 1
-                $(`#dislike_num_${id_comment}`).html(num_d)
-            }
-
-        }
-
-        $.ajax({
-            type: "POST",
-            url: `/article/comment_rating/${id_comment}/`,
-            data: {'like': $(`#like_box_${id_comment}`).prop('checked'), 'dislike': $(`#dislike_box_${id_comment}`).prop('checked')},
-            headers:{"X-CSRFToken":"{{ csrf_token }}"},
-
-            success: function(data){
-
-            }
         })
 
+        $('.article_rating').click(function (e) {
+             let num_dislike = parseInt($('#dislike_num').html())
+             let num_like = parseInt($('#like_num').html())
+            console.log('click')
 
 
-    })
+            if (e['target']['id'] == 'like_box') {
+                if ($('#like_box').prop('checked')) {
+                     let num_l = parseInt(num_like) + 1
+                    $('#like_num').html(num_l)
+                    if ($('#dislike_box').prop('checked')) {
+                        $('#dislike_box').prop('checked', false)
+                         let num_d = parseInt(num_dislike) - 1
+                        $('#dislike_num').html(num_d)
+                    }
 
-    $('.article_rating').click(function(e){
-        var num_dislike = parseInt($('#dislike_num').html())
-        var num_like = parseInt($('#like_num').html())
-        console.log('click')
+
+                } else {
+                     let num_l = parseInt(num_like) - 1
+                    $('#like_num').html(num_l)
+                }
+            }
+
+            if (e['target']['id'] == 'dislike_box') {
+                if ($('#dislike_box').prop('checked')) {
+                     let num_d = parseInt(num_dislike) + 1
+
+                    $('#dislike_num').html(num_d)
+                    if ($('#like_box').prop('checked')) {
+                        $('#like_box').prop('checked', false)
+                         let num_l = parseInt(num_like) - 1
+                        $('#like_num').html(num_l)
+                    }
 
 
-        if(e['target']['id'] == 'like_box'){
-           if ( $('#like_box').prop('checked')){
-                var num_l = parseInt(num_like) + 1
-                $('#like_num').html(num_l)
-                if($('#dislike_box').prop('checked')){
-                    $('#dislike_box').prop('checked', false)
-                    var num_d = parseInt(num_dislike) - 1
+                } else {
+                     let num_d = parseInt(num_dislike) - 1
                     $('#dislike_num').html(num_d)
                 }
 
-
-            }else{
-                var num_l = parseInt(num_like) - 1
-                $('#like_num').html(num_l)
             }
-        }
+            $.ajax({
+                type: "POST",
+                url: "{% url 'articles:rating_add' article.pk %}",
+                data: {
+                    'like': $('#like_box').prop('checked'),
+                    'dislike': $('#dislike_box').prop('checked')
+                },
+                headers: {"X-CSRFToken": "{{ csrf_token }}"},
 
-        if(e['target']['id'] == 'dislike_box'){
-           if ( $('#dislike_box').prop('checked')){
-                var num_d = parseInt(num_dislike) + 1
+                success: function (data) {
 
-                $('#dislike_num').html(num_d)
-                if($('#like_box').prop('checked')){
-                    $('#like_box').prop('checked', false)
-                    var num_l = parseInt(num_like) - 1
-                    $('#like_num').html(num_l)
                 }
+            })
 
-
-            }else{
-                var num_d = parseInt(num_dislike) - 1
-                $('#dislike_num').html(num_d)
-            }
-
-        }
-        $.ajax({
-            type: "POST",
-            url: "{% url 'articles:rating_add' article.pk %}",
-            data: {'like': $('#like_box').prop('checked'), 'dislike': $('#dislike_box').prop('checked')},
-            headers:{"X-CSRFToken":"{{ csrf_token }}"},
-
-            success: function(data){
-
-            }
         })
 
-    })
 
-
-</script>
+    </script>
 
 {% endblock %}
