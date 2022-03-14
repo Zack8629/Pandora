@@ -5,16 +5,10 @@ from django.urls import reverse_lazy
 from django.views.generic import DetailView, CreateView, DeleteView, UpdateView, ListView
 
 from account.models import Author
-from .forms import CommentCreateForm
+from .forms import CommentCreateForm, ArticleForm
 from .models import Articles, Category, Comment
-
-
-def get_all_categories():
-    return Category.objects.all()
-
-
-def get_all_articles():
-    return Articles.objects.all()
+from .services.rating_articles import like_dislike
+from .services.search import get_all_categories
 
 
 class ContextDataMixin:
@@ -87,8 +81,8 @@ class CategoryDetail(DetailView):
 
 
 class CreateArticlesView(ContextDataMixin, SuccessMessageMixin, CreateView):
+    form_class = ArticleForm
     model = Articles
-    fields = ['title', 'content', 'category', 'summary', 'image']
     template_name = 'articles/articles_create_form.html'
     page_title = 'Создание статьи'
     success_message = 'Статья успешна создана'
@@ -130,39 +124,22 @@ class DeleteArticlesView(ContextDataMixin, PermissionUserMixin, SuccessMessageMi
 
 
 class UpdateArticlesView(ContextDataMixin, PermissionUserMixin, SuccessMessageMixin, UpdateView):
-    model = Articles
-    fields = ['title', 'published', 'content', 'category', 'summary', 'image']
+    form_class = ArticleForm
     template_name = 'articles/update_article.html'
     page_title = 'Редактирование статьи'
     success_message = 'Статья успешно изменена'
+    model = Articles
 
     def get_success_url(self):
         return reverse_lazy('articles:article_view', kwargs={'slug': self.get_object().slug})
-
-
-def like_dislike_rating(obj, user, likes, dislikes):
-    if dislikes == 'true':
-        obj.like.remove(user)
-        obj.dislike.add(user)
-    else:
-        obj.dislike.remove(user)
-
-    if likes == 'true':
-        obj.dislike.remove(user)
-        obj.like.add(user)
-    else:
-        obj.like.remove(user)
 
 
 def rating_add(request, pk=None):
     if request.method == 'POST':
         likes = request.POST.get('like')
         dislikes = request.POST.get('dislike')
-        user = Author.objects.get(username=request.user.username)
-        article = Articles.objects.get(pk=pk)
-
-        like_dislike_rating(article, user, likes, dislikes)
-
+        username = request.user.username
+        like_dislike('article', username, pk, likes, dislikes)
     return JsonResponse({})
 
 
@@ -170,9 +147,7 @@ def comment_rating_add(request, pk=None):
     if request.method == 'POST':
         likes = request.POST.get('like')
         dislikes = request.POST.get('dislike')
-        user = Author.objects.get(username=request.user.username)
-        comment = Comment.objects.get(pk=pk)
-
-        like_dislike_rating(comment, user, likes, dislikes)
+        username = request.user.username
+        like_dislike('comment', username, pk, likes, dislikes)
 
     return JsonResponse({})
