@@ -4,9 +4,8 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, CreateView, DeleteView, UpdateView, ListView
 
-from account.models import Author
 from .forms import CommentCreateForm, ArticleForm
-from .models import Articles, Category, Comment
+from .models import Articles, Category
 from .services.rating_articles import like_dislike
 from .services.search import get_all_categories
 

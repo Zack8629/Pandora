@@ -23,14 +23,16 @@
                             <li>обновлено: {{ article.updated_at }}</li>
                             <li>просмотры: {{ article.views }}</li>
 
-                            <li>опубликовано:
-                                {% if article.published == True %}
-                                    да
-                                {% else %}
-                                    нет
-                                {% endif %}
-                            </li>
-                            {% if request.user == article.author %}
+{#                            <li>#}
+{#                                опубликовано:#}
+{#                                {% if article.published == True %}#}
+{#                                    да#}
+{#                                {% else %}#}
+{#                                    нет#}
+{#                                {% endif %}#}
+{#                            </li>#}
+
+                            {% if user == article.author or user.is_moderator == True %}
                                 <li>
                                     <a href="{% url 'articles:delete_article' article.slug %}">
                                         Удалить
@@ -363,13 +365,8 @@
                 headers: {"X-CSRFToken": "{{ csrf_token }}"},
 
                 success: function (data) {
-
                 }
             })
-
         })
-
-
     </script>
-
 {% endblock %}
