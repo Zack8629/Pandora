@@ -7,11 +7,11 @@
             {% include "inc-sidebar.html" %}
             <div>
                 <a href="{% url 'account:personal_data' request.user.pk %}">
-                    личные данные
+                    Личные данные
                 </a>
                 <div></div>
                 <a href="{% url 'account:my_articles' request.user.pk %}">
-                    мои статьи
+                    Мои статьи
                 </a>
 
                 <h3><a href="{% url 'account:update' pk=object.pk %}">Редактировать профиль</a>
