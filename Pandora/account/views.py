@@ -7,7 +7,7 @@ from django.views.generic.base import View
 
 from articles.models import Articles
 from articles.views import ContextDataMixin
-from .forms import CustomUserCreateForm
+from .forms import CustomUserCreateForm, AuthorForm
 from .models import Author
 
 
@@ -65,11 +65,11 @@ class AccountArticles(ContextDataMixin, ProperUserMixin, DetailView):
 
 
 class AccountUpdateView(ContextDataMixin, ProperUserMixin, SuccessMessageMixin, UpdateView):
+    form_class = AuthorForm
     model = Author
-    fields = ['username', 'first_name', 'last_name', 'email', 'about_me', 'birthday']
     template_name = 'account/update_account.html'
     page_title = 'Изменение профайла'
     success_message = 'Данные успешно изменены'
 
     def get_success_url(self):
-        return reverse_lazy('account:account', kwargs={'pk': self.request.user.pk})
+        return reverse_lazy('account:personal_data', kwargs={'pk': self.request.user.pk})
