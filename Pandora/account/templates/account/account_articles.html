@@ -22,7 +22,7 @@
                     </a>
                     <h5>дата публикации:{{ item.created_at }}</h5>
                     <h5>тематика: {{ item.category }}</h5>
-                    <p>{{ item.summary }}</p>
+                    <p>{{ item.summary | safe}}</p>
                 {% endfor %}
             </div>
             <!--      <div id="banner"></div>-->
