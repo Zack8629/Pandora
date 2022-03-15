@@ -87,7 +87,7 @@ class CreateArticlesView(ContextDataMixin, SuccessMessageMixin, CreateView):
     success_message = 'Статья успешна создана'
 
     def get_success_url(self):
-        return reverse_lazy('account:account', kwargs={'pk': self.request.user.pk})
+        return reverse_lazy('account:personal_data', kwargs={'pk': self.request.user.pk})
 
     def form_valid(self, form, *args, **kwargs):
         form.save(commit=False)

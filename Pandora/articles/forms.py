@@ -19,3 +19,4 @@ class ArticleForm(forms.ModelForm):
         self.fields['title'].widget.attrs.update({'class': 'form-control'})
         self.fields['category'].widget.attrs.update({'class': 'form-control'})
         self.fields['image'].widget.attrs.update({'class': 'form-control'})
+        self.fields['summary'].widget.attrs.update({'class': 'form-control'})
