@@ -27,7 +27,7 @@
                             <li>просмотры: {{ item.views }}</li>
                         </ul>
                     </div>
-                    <p>{{ item.summary }}</p>
+                    <p>{{ item.summary | safe}}</p>
 
                     <hr>
                 {% endfor %}
