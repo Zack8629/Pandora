@@ -8,7 +8,7 @@ from account.models import Author
 from .forms import CommentCreateForm, ArticleForm
 from .models import Articles, Category, Comment
 from .services.rating_articles import like_dislike
-from .services.search import get_all_categories
+from .services.search import get_all_categories, sorting_articles
 
 
 class ContextDataMixin:
@@ -28,12 +28,30 @@ class ArticlesListView(ContextDataMixin, ListView):
     context_object_name = "articles"
     page_title = "Все статьи"
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        category_slug = self.kwargs.get('slug')
+        if category_slug is not None:
+            queryset = queryset.filter(category__slug=category_slug)
+
+        queryset = queryset.filter(published=True)
+        return queryset
+
+    def get_ordering(self):
+        get_params = self.request.GET
+        if get_params:
+            return sorting_articles(**get_params)
+        super(ArticlesListView, self).get_ordering()
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['categories'] = get_all_categories()
-        context['articles'] = Articles.objects.filter(published=True)
-        if self.page_title is not None:
-            context['page_title'] = self.page_title
+
+        category_slug = self.kwargs.get('slug')
+        if category_slug is not None:
+            selected_category = Category.objects.get(slug=category_slug).title
+            context['selected_category'] = selected_category
+
         return context
 
 
@@ -63,20 +81,6 @@ class ArticleDetailView(ContextDataMixin, DetailView):
         comment_form = CommentCreateForm()
         context['comment_form'] = comment_form
         return context
-
-
-class CategoryDetail(DetailView):
-    model = Category
-    template_name = 'articles/index.html'
-
-    def get_context_data(self, **kwargs):
-        """Returns the data passed to the template"""
-        selected_category = self.get_object()
-        return {
-            "articles": Articles.objects.filter(category__slug=self.kwargs['slug'], published=True),
-            "selected_category": selected_category.title,
-            'categories': get_all_categories()
-        }
 
 
 class CreateArticlesView(ContextDataMixin, SuccessMessageMixin, CreateView):
