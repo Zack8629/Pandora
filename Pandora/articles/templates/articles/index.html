@@ -8,7 +8,24 @@
             {% include "inc-sidebar.html" %}
             <div id="content">
                 <!-- insert the page content here -->
+                <div id="head_content" style="    width: 300px;">
+                    <div id="sorting" style="float: right;
+    margin-top: 16px; " >
+                        <select name="list1" id="sorting_select" style="width: 150px">
+                             <option selected="" class="desc data">Самые новые</option>
+                             <option class="asc data">Самые старые</option>
+                             <option class="desc rating">Самые популярные</option>
+                             <option class="desc comment">Самые обсуждаемые</option>
+                             <option class="asc like">Самое большое количество лайков</option>
+
+                        </select>
+
+                    </div>
+
+
                 <h1>Все статьи</h1>
+                </div>
+
                 <hr>
                 {% for item in articles %}
 
@@ -34,4 +51,36 @@
             </div>
         </div>
     </div>
+
+          <script
+          src="https://code.jquery.com/jquery-3.6.0.slim.js"
+          integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY="
+          crossorigin="anonymous">
+        </script>
+<script>
+    var paramsString = document.location.search;
+    var searchParams = new URLSearchParams(paramsString);
+
+    let sort = searchParams.get("sorting");
+    let field = searchParams.get("field");
+    console.log(sort, field)
+    $('#sorting_select option').each(function(item, i, arr) {
+      if ($(this).hasClass(sort+' '+ field)){
+            $(this).prop('selected', true);
+      }
+    });
+
+
+    $('#sorting_select').on('click', function(e){
+        console.log('sort')
+        let location = document.location.pathname
+        console.log($('option:selected').attr('class').split(' '))
+        let sorting_params = $('option:selected').attr('class').split(' ')
+        console.log(location)
+        console.log(location+'?sorting='+sorting_params[0]+'&field='+sorting_params[1])
+        document.location.href = location+'?sorting='+sorting_params[0]+'&field='+sorting_params[1]
+
+    })
+</script>
+
 {% endblock %}
