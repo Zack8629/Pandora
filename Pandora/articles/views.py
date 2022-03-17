@@ -4,10 +4,11 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, CreateView, DeleteView, UpdateView, ListView
 
+from account.models import Author
 from .forms import CommentCreateForm, ArticleForm
-from .models import Articles, Category
+from .models import Articles, Category, Comment
 from .services.rating_articles import like_dislike
-from .services.search import get_all_categories
+from .services.search import get_all_categories, sorting_articles, search_article
 
 
 class ContextDataMixin:
@@ -26,6 +27,24 @@ class ArticlesListView(ContextDataMixin, ListView):
     template_name = 'articles/index.html'
     context_object_name = "articles"
     page_title = "Все статьи"
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        category_slug = self.kwargs.get('slug')
+        search_value = self.request.GET.get('search')
+        if category_slug is not None:
+            queryset = queryset.filter(category__slug=category_slug)
+
+        queryset = queryset.filter(published=True)
+        queryset = search_article(search_value, queryset)
+
+        return queryset
+
+    def get_ordering(self):
+        get_params = self.request.GET
+        if get_params:
+            return sorting_articles(**get_params)
+        super(ArticlesListView, self).get_ordering()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -64,21 +83,6 @@ class ArticleDetailView(ContextDataMixin, DetailView):
         return context
 
 
-class CategoryDetail(DetailView):
-    model = Category
-    template_name = 'articles/index.html'
-
-    def get_context_data(self, **kwargs):
-        """Returns the data passed to the template"""
-        selected_category = self.get_object()
-        return {
-            "articles": Articles.objects.filter(category__slug=self.kwargs['slug'],
-                                                published=True),
-            "selected_category": selected_category.title,
-            'categories': get_all_categories()
-        }
-
-
 class CreateArticlesView(ContextDataMixin, SuccessMessageMixin, CreateView):
     form_class = ArticleForm
     model = Articles
@@ -87,7 +91,7 @@ class CreateArticlesView(ContextDataMixin, SuccessMessageMixin, CreateView):
     success_message = 'Статья успешна создана'
 
     def get_success_url(self):
-        return reverse_lazy('account:account', kwargs={'pk': self.request.user.pk})
+        return reverse_lazy('account:personal_data', kwargs={'pk': self.request.user.pk})
 
     def form_valid(self, form, *args, **kwargs):
         form.save(commit=False)
@@ -102,24 +106,12 @@ class CreateArticlesView(ContextDataMixin, SuccessMessageMixin, CreateView):
         return super(CreateArticlesView, self).dispatch(request, *args, **kwargs)
 
 
-# !ТУТ!
-# class PermissionUserMixin:
-#     def dispatch(self, request, *args, **kwargs):
-#         if not request.user.is_authenticated:
-#             return redirect('account:login')
-#         if not request.user == self.get_object().author:
-#             return HttpResponseNotFound()
-#
-#         return super(PermissionUserMixin, self).dispatch(request, *args, **kwargs)
-
-
 class PermissionUserMixin:
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect('account:login')
         if request.user == self.get_object().author or \
                 self.request.user.is_moderator or self.request.user.is_superuser:
-            print('LLOLOLOL', request.user.is_moderator)
             return super(PermissionUserMixin, self).dispatch(request, *args, **kwargs)
         return HttpResponseNotFound()
 

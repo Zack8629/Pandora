@@ -62,7 +62,8 @@ class Articles(models.Model, Rating):
     content = HTMLField(verbose_name="Контент")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата редактирования")
-    image = models.ImageField(upload_to="photos/%Y/%m/%d/", verbose_name="Фото", blank=True)
+    image = models.ImageField(upload_to="photos/%Y/%m/%d/", verbose_name="Фото", blank=True,
+                              default="default_images/it_news_default.webp")
     published = models.BooleanField(default=True, verbose_name="Опубликовано")
     category = models.ForeignKey(Category, on_delete=models.PROTECT, verbose_name="Категория")
     slug = models.SlugField(unique=True)
@@ -70,6 +71,8 @@ class Articles(models.Model, Rating):
     like = models.ManyToManyField(Author, related_name='like', blank=True)
     dislike = models.ManyToManyField(Author, related_name='dislike', blank=True)
     views = models.IntegerField(default=0, verbose_name='Просмотры')
+    quantity_comment = models.IntegerField(default=0, verbose_name='Количество коментариев')
+
 
     def add_views(self):
         self.views += 1
@@ -83,10 +86,12 @@ class Articles(models.Model, Rating):
             self.slug = gen_slug(self.title, model_type='articles')
         super().save(*args, **kwargs)
 
+
     class Meta:
         verbose_name = "Статья"
         verbose_name_plural = "Статьи"
         ordering = ["-created_at"]
+
 
 
 class Comment(models.Model, Rating):
@@ -103,6 +108,11 @@ class Comment(models.Model, Rating):
 
     def __str__(self):
         return f'{self.id}. {self.user.username} - {self.article.title}'
+
+    def save(self, *args, **kwargs):
+        self.article.quantity_comment += 1
+        self.article.save(update_fields=['quantity_comment'])
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Комментарий'
