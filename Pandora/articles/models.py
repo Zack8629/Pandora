@@ -62,7 +62,8 @@ class Articles(models.Model, Rating):
     content = HTMLField(verbose_name="Контент")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата редактирования")
-    image = models.ImageField(upload_to="photos/%Y/%m/%d/", verbose_name="Фото", blank=True)
+    image = models.ImageField(upload_to="photos/%Y/%m/%d/", verbose_name="Фото", blank=True,
+                              default="default_images/it_news_default.webp")
     published = models.BooleanField(default=True, verbose_name="Опубликовано")
     category = models.ForeignKey(Category, on_delete=models.PROTECT, verbose_name="Категория")
     slug = models.SlugField(unique=True)
