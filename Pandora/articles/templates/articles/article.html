@@ -29,7 +29,7 @@
                                     нет
                                 {% endif %}
                             </li>
-                            {% if request.user == article.author or true == true %}
+                            {% if request.user == article.author or request.user == true %}
                                 <li><a href="{% url 'articles:delete_article' article.slug%}">Удалить</a>
                                     <a href="{% url 'articles:update_article' article.slug%}">Редактировать</a></li>
                             {% endif %}

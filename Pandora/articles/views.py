@@ -111,7 +111,8 @@ class PermissionUserMixin:
         if not request.user.is_authenticated:
             return redirect('account:login')
         if request.user == self.get_object().author or \
-                self.request.user.is_moderator or self.request.user.is_superuser:
+                self.request.user.is_moderator or \
+                self.request.user.is_superuser:
             return super(PermissionUserMixin, self).dispatch(request, *args, **kwargs)
         return HttpResponseNotFound()
 
