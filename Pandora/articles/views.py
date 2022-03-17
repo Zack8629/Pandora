@@ -8,7 +8,7 @@ from account.models import Author
 from .forms import CommentCreateForm, ArticleForm
 from .models import Articles, Category, Comment
 from .services.rating_articles import like_dislike
-from .services.search import get_all_categories, sorting_articles
+from .services.search import get_all_categories, sorting_articles, search_article
 
 
 class ContextDataMixin:
@@ -31,10 +31,13 @@ class ArticlesListView(ContextDataMixin, ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         category_slug = self.kwargs.get('slug')
+        search_value = self.request.GET.get('search')
         if category_slug is not None:
             queryset = queryset.filter(category__slug=category_slug)
 
         queryset = queryset.filter(published=True)
+        queryset = search_article(search_value, queryset)
+
         return queryset
 
     def get_ordering(self):
