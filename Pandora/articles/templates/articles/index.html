@@ -11,11 +11,12 @@
                 <div id="head_content" style="    width: 300px;">
                     <div id="sorting" style="float: right;
     margin-top: 16px; " >
-                        <select name="list1" id="sorting_select" style="width: 150px">
-                             <option selected="" class="desc data">Самые новые</option>
-                             <option class="asc data">Самые старые</option>
-                             <option class="desc rating">Самые популярные</option>
-                             <option class="desc comment">Самые обсуждаемые</option>
+
+                        <select id="sorting_select"   style="width: 150px">
+                             <option selected="" class="desc data">Новые</option>
+                             <option class="asc data">Старые</option>
+                             <option class="desc rating">Популярные</option>
+                             <option class="desc comment">Обсуждаемые</option>
                              <option class="asc like">Самое большое количество лайков</option>
 
                         </select>
@@ -24,6 +25,16 @@
 
 
                 <h1>Все статьи</h1>
+                    <div class="row g-3 align-items-center">
+                      <div class="col-auto">
+                        <input type="search" id="search" style="width: 200px;
+    height: 20px;" class="form-control" >
+                      </div>
+                        <button type="button" id="click_search" style="    width: 50px;
+    height: 20px;display: flex;
+    align-items: center;
+    justify-content: center;" class="btn btn-primary">Поиск</button>
+                    </div>
                 </div>
 
                 <hr>
@@ -63,24 +74,48 @@
 
     let sort = searchParams.get("sorting");
     let field = searchParams.get("field");
+    let search_field = searchParams.get("search");
     console.log(sort, field)
-    $('#sorting_select option').each(function(item, i, arr) {
+    $('#sorting_select option').each(function() {
       if ($(this).hasClass(sort+' '+ field)){
             $(this).prop('selected', true);
       }
     });
+    if (search_field){
+        $('#search').val(search_field)
+
+    }
 
 
-    $('#sorting_select').on('click', function(e){
+    $('#sorting_select').change(function(e){
         console.log('sort')
-        let location = document.location.pathname
-        console.log($('option:selected').attr('class').split(' '))
+        let location = document.location.href.split('?')[0]
         let sorting_params = $('option:selected').attr('class').split(' ')
-        console.log(location)
-        console.log(location+'?sorting='+sorting_params[0]+'&field='+sorting_params[1])
-        document.location.href = location+'?sorting='+sorting_params[0]+'&field='+sorting_params[1]
+        var url = new URL(location);
+        url.searchParams.append('sorting', sorting_params[0]);
+        url.searchParams.append('field', sorting_params[1]);
+        if (search_field){
+            url.searchParams.append('search', search_field);
+        }
+
+        document.location.href = url
 
     })
+
+    $('#click_search').click(function(e){
+        let location = document.location.href.split('?')[0]
+        let search_val = $('#search').val()
+        var url = new URL(location);
+        if (sort){
+            url.searchParams.append('sorting', sort);
+        }
+        if (field){
+            url.searchParams.append('field', field);
+        }
+        url.searchParams.append('search', search_val);
+        document.location.href = url
+    })
+
 </script>
 
 {% endblock %}
