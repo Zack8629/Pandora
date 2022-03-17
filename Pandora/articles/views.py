@@ -102,14 +102,26 @@ class CreateArticlesView(ContextDataMixin, SuccessMessageMixin, CreateView):
         return super(CreateArticlesView, self).dispatch(request, *args, **kwargs)
 
 
+# !ТУТ!
+# class PermissionUserMixin:
+#     def dispatch(self, request, *args, **kwargs):
+#         if not request.user.is_authenticated:
+#             return redirect('account:login')
+#         if not request.user == self.get_object().author:
+#             return HttpResponseNotFound()
+#
+#         return super(PermissionUserMixin, self).dispatch(request, *args, **kwargs)
+
+
 class PermissionUserMixin:
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect('account:login')
-        if not request.user == self.get_object().author:
-            return HttpResponseNotFound()
-
-        return super(PermissionUserMixin, self).dispatch(request, *args, **kwargs)
+        if request.user == self.get_object().author or \
+                self.request.user.is_moderator or self.request.user.is_superuser:
+            print('LLOLOLOL', request.user.is_moderator)
+            return super(PermissionUserMixin, self).dispatch(request, *args, **kwargs)
+        return HttpResponseNotFound()
 
 
 class DeleteArticlesView(ContextDataMixin, PermissionUserMixin, SuccessMessageMixin, DeleteView):

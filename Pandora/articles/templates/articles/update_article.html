@@ -1,10 +1,8 @@
 {% extends "base.html" %}
 
 {% block body %}
-@Html.Raw(row.Content.ToString())
-
+    {#@Html.Raw(row.Content.ToString())#}
     <div id="main">
-
         <div id="content_header"></div>
         <div id="site_content">
             {% include "inc-sidebar.html" %}
@@ -13,13 +11,10 @@
                     <h1>{{ page_title }}</h1>
                     <form method="post">{% csrf_token %}
                         {{ form.as_p }}
-                       <button type="submit" class="btn btn-primary mb-2">Сохранить</button>
+                        <button type="submit" class="btn btn-primary mb-2">Сохранить</button>
                     </form>
-
                 </div>
             </div>
-
-
         </div>
     </div>
 {% endblock %}
