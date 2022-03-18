@@ -29,9 +29,11 @@
                                     нет
                                 {% endif %}
                             </li>
-                            {% if request.user == article.author %}
-                                <li><a href="{% url 'articles:delete_article' article.slug%}">Удалить</a>
-                                    <a href="{% url 'articles:update_article' article.slug%}">Редактировать</a></li>
+                            {% if request.user == article.author or
+                                request.user.is_moderator == True or
+                                request.user.is_superuser == True %}
+                                    <li><a href="{% url 'articles:delete_article' article.slug%}">Удалить</a>
+                                        <a href="{% url 'articles:update_article' article.slug%}">Редактировать</a></li>
                             {% endif %}
                         </ul>
                     </div>

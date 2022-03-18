@@ -6,3 +6,4 @@ class Author(AbstractUser):
     email = models.EmailField(verbose_name='email', unique=True)
     about_me = models.TextField(verbose_name="обо мне", blank=True)
     birthday = models.DateField(verbose_name='день рождения', blank=True, null=True)
+    is_moderator = models.BooleanField(default=False)

@@ -5,7 +5,7 @@
             <!-- class="logo_colour", allows you to change the colour of the text -->
             <h1><a href="{% url 'articles:index_articles' %}">intergalactic<span
                     class="logo_colour">_entertainment</span></a></h1>
-            <h2>знания и навыки для успешной смены профессии и карьерного роста</h2>
+            <h2>>Знания и навыки для успешной смены профессии и карьерного роста</h2>
         </div>
     </div>
     <div id="menubar">
@@ -15,7 +15,6 @@
             <li><a href="{% url 'articles:index_articles' %}">Главная</a></li>
 
             {% for el_categories in categories %}
-
                 <li>
                     <a href="{% url 'articles:category_view' slug=el_categories.slug %}">
                         {{ el_categories.title }}
@@ -29,7 +28,8 @@ margin-left: 10px;">
                 <div class="dropdown">
                     <a class="" href="#" role="button" id="dropdownMenuLink"
                        data-bs-toggle="dropdown" aria-expanded="false">
-                        <img class="" src="{% static 'img/user.png' %}" style="width: 25px;">
+                        <img class="" src="{% static 'img/user.png' %}" style="width: 25px;"
+                             alt="">
                     </a>
 
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
@@ -48,17 +48,11 @@ margin-left: 10px;">
                                    href="{% url 'account:registration' %}" style="      color: black;
     background: white;">Зарегистрироваться</a></li>
                         {% endif %}
-
-
                     </ul>
                 </div>
             </div>
-
         </ul>
-
-
     </div>
-
 </div>
 
 

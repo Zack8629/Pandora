@@ -49,12 +49,8 @@ class ArticlesListView(ContextDataMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['categories'] = get_all_categories()
-
-        category_slug = self.kwargs.get('slug')
-        if category_slug is not None:
-            selected_category = Category.objects.get(slug=category_slug).title
-            context['selected_category'] = selected_category
-
+        if self.page_title is not None:
+            context['page_title'] = self.page_title
         return context
 
 
@@ -113,10 +109,11 @@ class PermissionUserMixin:
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect('account:login')
-        if not request.user == self.get_object().author:
-            return HttpResponseNotFound()
-
-        return super(PermissionUserMixin, self).dispatch(request, *args, **kwargs)
+        if request.user == self.get_object().author or \
+                self.request.user.is_moderator or \
+                self.request.user.is_superuser:
+            return super(PermissionUserMixin, self).dispatch(request, *args, **kwargs)
+        return HttpResponseNotFound()
 
 
 class DeleteArticlesView(ContextDataMixin, PermissionUserMixin, SuccessMessageMixin, DeleteView):
