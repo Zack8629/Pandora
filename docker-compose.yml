@@ -1,0 +1,13 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres:13.4
+    privileged: true
+    ports:
+      - 5606:5432
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: passworduser
+      POSTGRES_DB: pandora
+

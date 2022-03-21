@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <div id="main">
+        <div id="content_header"></div>
+        <div id="site_content">
+            {% include "inc-sidebar.html" %}
+            <div>
+                <a href="{% url 'account:personal_data' request.user.pk %}">
+                    Личные данные
+                </a>
+                <div></div>
+                <a href="{% url 'account:my_articles' request.user.pk %}">
+                    Мои статьи
+                </a>
+
+                <h3><a href="{% url 'account:update' pk=object.pk %}">Редактировать профиль</a>
+                </h3>
+                <h1>{{ page_title }}</h1>
+                <h2>Имя пользователя: {{ object.username }}</h2>
+                <h3>E-mail: {{ object.email }}</h3>
+                <h3>Имя: {{ object.first_name }}</h3>
+                <h3>Фамилия: {{ object.last_name }}</h3>
+                <h3>Дата рождения: {{ object.birthday }}</h3>
+                <h3>О себе: {{ object.about_me }}</h3>
+            </div>
+            <!--      <div id="banner"></div>-->
+        </div>
+    </div>
+{% endblock %}

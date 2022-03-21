@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <div id="main">
+        <div id="content_header"></div>
+        <div id="site_content">
+            {% include "inc-sidebar.html" %}
+            <div>
+                <a href="{% url 'account:personal_data' request.user.pk %}">
+                    личные данные
+                </a>
+                <div></div>
+                <a href="{% url 'account:my_articles' request.user.pk %}">
+                    мои статьи
+                </a>
+
+                <h3><a href="{% url 'articles:create_articles' %}">Создать статью</a></h3>
+                <h2>Статьи автора:</h2>
+                {% for item in articles %}
+                    <a href="{% url 'articles:article_view' slug=item.slug %}">
+                        <h4>{{ item.title }}</h4>
+                    </a>
+                    <h5>дата публикации:{{ item.created_at }}</h5>
+                    <h5>тематика: {{ item.category }}</h5>
+                    <p>{{ item.summary | safe}}</p>
+                {% endfor %}
+            </div>
+            <!--      <div id="banner"></div>-->
+        </div>
+    </div>
+{% endblock %}
