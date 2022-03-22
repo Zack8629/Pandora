@@ -1,5 +1,5 @@
 {%extends "base.html" %}
-
+{% load role_tag %}
 {% block body %}
     <div id="main">
         <div id="content_header"></div>
@@ -17,7 +17,7 @@
                         <ul>
                             <li><h1>{{article.title}}</h1></li>
                             <li>тематика: {{article.category}}</li>
-                            <li>автор: {{article.author}}</li>
+                            <li>автор: <a href="{% url 'account:personal_data' article.author.pk %}">{{ article.author| is_role_user}}</a></li>
                             <li>дата создания: {{article.created_at}}</li>
                             <li>обновлено: {{article.updated_at}}</li>
                             <li>просмотры: {{article.views}}</li>
@@ -37,6 +37,7 @@
                     </div>
                     <p>{{article.content | safe}}</p>
 
+                    {% if article.published %}
                     <div class="check_box" style="display: inline-block; margin-bottom: 10px;">
                         <div class="form-check" style="float: left;">
 
@@ -84,7 +85,7 @@
                         {% if not comment.is_child %}
 
                         <div class="card my-2">
-                            <h5 class="card-header"><span class="badge bg-secondary">{{ comment.user.username }}</span> | {{ comment.created_at }}
+                            <h5 class="card-header"><span class="badge bg-secondary">{{ comment.user.username| is_role_user }}</span> | {{ comment.created_at }}
                             <div class="check_box" style="display: inline-block; margin-bottom: 10px;">
                         <div class="form-check" style="float: left;">
 
@@ -124,7 +125,7 @@
                             {% if comment.child_comments %}
                                 {% for child_comment in comment.child_comments.all %}
                                     <div class="card my-2 ml-2" style="margin-left: 50px;">
-                                        <h5 class="card-header"><span class="badge bg-secondary">{{ comment.user.username }}</span> | {{ comment.created_at }}
+                                        <h5 class="card-header"><span class="badge bg-secondary">{{ comment.user.username| is_role_user }}</span> | {{ comment.created_at }}
                                          <div class="check_box" style="display: inline-block; margin-bottom: 10px;">
                         <div class="form-check" style="float: left;">
 
@@ -152,7 +153,7 @@
                         </div>
                           </div></h5>
                                         <div class="card-body">
-                                            <h5 class="card-title">Ответ пользователю {{ comment.user.username }}
+                                            <h5 class="card-title">Ответ пользователю {{ comment.user.username | is_role_user}}
 
                                             </h5>
                                             <p class="card-text">{{ child_comment.text }}</p>
@@ -163,7 +164,7 @@
                         {% endif %}
                     {% endfor %}
                 {% endif %}
-
+            {% endif %}
             </div>
 
             </div>

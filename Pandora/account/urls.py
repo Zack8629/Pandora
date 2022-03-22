@@ -11,5 +11,5 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(next_page='/'), name='logout'),
     path('registration/', account.RegistrationView.as_view(), name='registration'),
     path('<int:pk>/', account.AccountPersonalData.as_view(), name='personal_data'),
-    path('<int:pk>/my_articles', account.AccountArticles.as_view(), name='my_articles'),
+    path('<int:pk>/my_articles/<str:type>/', account.AccountArticles.as_view(), name='my_articles'),
 ]
