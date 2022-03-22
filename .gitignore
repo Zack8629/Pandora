@@ -1,6 +1,7 @@
 venv
 /HELPS_ME/
 /.idea/
+server.logs
 
 *.pyc
 
