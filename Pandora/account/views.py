@@ -38,7 +38,7 @@ class ProperUserMixin:
         return super(ProperUserMixin, self).dispatch(request, *args, **kwargs)
 
 
-class AccountPersonalData(ContextDataMixin, ProperUserMixin, DetailView):
+class AccountPersonalData(ContextDataMixin, DetailView):
     model = Author
     template_name = "account/account_personal_data.html"
     page_title = 'Личный кабинет'
@@ -51,17 +51,33 @@ class AccountPersonalData(ContextDataMixin, ProperUserMixin, DetailView):
         return context
 
 
-class AccountArticles(ContextDataMixin, ProperUserMixin, DetailView):
+class AccountArticles(ContextDataMixin, DetailView):
     model = Author
     template_name = "account/account_articles.html"
     page_title = 'Личный кабинет - статьи'
 
     def get_context_data(self, **kwargs):
         pk = self.kwargs['pk']
+        type_article = self.kwargs.get('type')
         context = super().get_context_data(**kwargs)
-        context['articles'] = Articles.objects.filter(author=pk)
+        if type_article == 'published':
+            context['articles'] = Articles.objects.filter(author=pk, published=True)
+            context['type'] = 'published'
+
+        if type_article == 'draft':
+            context['articles'] = Articles.objects.filter(author=pk, published=False)
+            context['type'] = 'draft'
 
         return context
+
+    def dispatch(self, request, *args, **kwargs):
+        type_article = self.kwargs.get('type')
+        if not self.request.user.is_authenticated or self.request.user.pk != kwargs.get('pk'):
+            if type_article == 'draft':
+                return HttpResponseNotFound()
+
+        return super(AccountArticles, self).dispatch(request, *args, **kwargs)
+
 
 
 class AccountUpdateView(ContextDataMixin, ProperUserMixin, SuccessMessageMixin, UpdateView):
