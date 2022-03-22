@@ -1,0 +1,12 @@
+[Unit]
+Description=pandora daemon
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/home/pandora_team/Pandora/Pandora
+ExecStart=/usr/bin/gunicorn3 --access-logfile server.logs --workers 2 --bind unix:/home/pandora_team/Pandora/Pandora/pandora.sock Pandora.wsgi
+
+[Install]
+WantedBy=multi-user.target
