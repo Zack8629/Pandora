@@ -1,0 +1,18 @@
+server {
+    listen 80;
+    server_name 194.67.121.234;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location /static/ {
+        root /home/pandora_team/Pandora/Pandora;
+    }
+
+    location /media/ {
+        root /home/pandora_team/Pandora/Pandora;
+    }
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/home/pandora_team/Pandora/Pandora/pandora.sock;
+    }
+}
