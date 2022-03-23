@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <div id="main">
+        <div id="content_header"></div>
+        <div id="site_content">
+            {% include "inc-sidebar.html" %}
+
+            <div>
+
+                <a href="{% url 'account:personal_data' object.pk %}">
+                    Назад
+                </a>
+                <table class="table">
+                  <thead>
+                    <tr style="color: black;">
+                      <th scope="col" style="color: black;">id</th>
+                      <th scope="col" style="color: black;">Название</th>
+                      <th scope="col" style="color: black;">автор</th>
+                      <th scope="col" style="color: black;">Дата создания</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for article in articles_view%}
+                    <tr>
+
+                      <th scope="row">{{article.id}}</th>
+                      <td><a href="{% url 'articles:article_view' slug=article.slug %}">{{article.title}}</a></td>
+                      <td>{{article.author.username}}</td>
+                      <td>{{article.created_at}}</td>
+                        <td>
+                            <a class='approve' id='moder_{{article.id}}' href="#">Одобрить</a></td>
+                        </td>
+                        <td>
+                            <a class='not_approve' id='moder_{{article.id}}' href="#">Не одобрить</a></td>
+                        </td>
+                    </tr>
+                  {% endfor%}
+                  </tbody>
+                </table>
+
+        </div>
+    </div>
+          <script
+          src="https://code.jquery.com/jquery-3.6.0.slim.js"
+          integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY="
+          crossorigin="anonymous">
+        </script>
+        <script>
+            $(".approve").click(function(){
+
+                  let id_article = Number($(this).attr('id').split('_')[1])
+
+                 $.ajax({
+                    type: "GET",
+                    url: "/accounts/approve/approve/"+id_article+"/",
+
+                    success: function(data){
+                        window.location.reload()
+                    }
+                })
+
+
+            })
+
+            $(".not_approve").click(function(){
+
+                  let id_article = Number($(this).attr('id').split('_')[1])
+
+                 $.ajax({
+                    type: "GET",
+                    url: "/accounts/approve/not_approve/"+id_article+"/",
+
+
+                    success: function(data){
+                        window.location.reload()
+                    }
+                })
+
+
+            })
+
+
+        </script>
+{% endblock %}

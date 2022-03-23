@@ -27,7 +27,10 @@
                           Опубликованные
                     </a>
 
-                      На модерации
+                       <a href="{% url 'account:my_articles' object.pk 'moderation'%}">
+                     На модерации
+                </a>
+
 
                       <a href="{% url 'account:my_articles' object.pk 'draft'%}">
                     Черновики
@@ -45,6 +48,11 @@
                     <h1>Черновики</h1>
 
                  {% endif %}
+                                {% if type == 'moderation'%}
+                    <h1>На модерации</h1>
+
+                 {% endif %}
+
                 <h2>Статьи автора:</h2>
                 {% for item in articles %}
                     <a href="{% url 'articles:article_view' slug=item.slug %}">
