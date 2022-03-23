@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <div id="main">
+        <div id="content_header"></div>
+        <div id="site_content">
+            {% include "inc-sidebar.html" %}
+
+            <div>
+
+                <a href="{% url 'account:personal_data' object.pk %}">
+                    Назад
+                </a>
+                <table class="table">
+                  <thead>
+                    <tr style="color: black;">
+                      <th scope="col" style="color: black;">id</th>
+                      <th scope="col" style="color: black;">Username</th>
+                      <th scope="col" style="color: black;">email</th>
+                      <th scope="col" style="color: black;">Имя</th>
+                      <th scope="col" style="color: black;">Фамилия</th>
+                      <th scope="col" style="color: black;">Роль</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for user in authors%}
+                    <tr>
+
+                      <th scope="row">{{user.id}}</th>
+                      <td>{{user.username}}</td>
+                      <td>{{user.email}}</td>
+                      <td>{{user.first_name}}</td>
+                      <td>{{user.last_name}}</td>
+                      <td>
+                          {% if user.is_superuser %}
+                                admin
+                          {% elif user.is_moderator%}
+                                moderator
+                          {% else %}
+                                пользователь
+                          {% endif %}
+                      </td>
+                        <td>
+                        {% if user.is_superuser%}
+
+                        {% else %}
+                            {% if user.is_moderator%}
+                            <a class="click_moder" id='give_moder_{{user.pk}}' href="#">Убрать</a>
+
+                          {% else %}
+                             <a class="click_moder" id='give_moder_{{user.pk}}' href="#">Назначить</a>
+                          {% endif %}
+
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor%}
+                  </tbody>
+                </table>
+
+
+
+        </div>
+    </div>
+          <script
+          src="https://code.jquery.com/jquery-3.6.0.slim.js"
+          integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY="
+          crossorigin="anonymous">
+        </script>
+        <script>
+            $(".click_moder").click(function(){
+                  console.log('click')
+                  let id_user = Number($(this).attr('id').split('_')[2])
+                  console.log(id_user)
+                 $.ajax({
+                    type: "GET",
+                    url: "/accounts/give_rights/"+id_user+"/",
+                    headers:{"X-CSRFToken":"{{ csrf_token }}"},
+
+                    success: function(data){
+                        window.location.reload()
+                    }
+                })
+
+
+            })
+
+
+
+
+        </script>
+{% endblock %}

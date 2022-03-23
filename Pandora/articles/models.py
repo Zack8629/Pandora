@@ -73,6 +73,19 @@ class Articles(models.Model, Rating):
     views = models.IntegerField(default=0, verbose_name='Просмотры')
     quantity_comment = models.IntegerField(default=0, verbose_name='Количество коментариев')
 
+    for_moderation = models.BooleanField(default=False, verbose_name="На модерации")
+
+    @staticmethod
+    def author_published_article(pk):
+        return Articles.objects.filter(author=pk, published=True, for_moderation=False)
+
+    @staticmethod
+    def author_draft_article(pk):
+        return Articles.objects.filter(author=pk, published=False, for_moderation=False)
+
+    @staticmethod
+    def author_moderation_article(pk):
+        return Articles.objects.filter(author=pk, published=False, for_moderation=True)
 
     def add_views(self):
         self.views += 1
