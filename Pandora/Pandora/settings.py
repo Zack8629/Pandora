@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'tinymce',
     'articles.apps.ArticlesConfig',
     'account',
+    'mathfilters',
 ]
 
 MIDDLEWARE = [
