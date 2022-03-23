@@ -8,3 +8,4 @@ tzdata==2021.5
 django-tinymce
 repath
 backports.zoneinfo==0.2.1
+django-mathfilters

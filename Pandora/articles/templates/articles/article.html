@@ -1,5 +1,6 @@
 {%extends "base.html" %}
 {% load role_tag %}
+{% load mathfilters %}
 {% block body %}
     <div id="main">
         <div id="content_header"></div>
@@ -41,30 +42,37 @@
                     <div class="check_box" style="display: inline-block; margin-bottom: 10px;">
                         <div class="form-check" style="float: left;">
 
-                        {% if request.user.username in article.get_list_user_likes %}
-                            <input class=" check-like-input article_rating" type="checkbox" value="" id="like_box" checked>
-                         {% else %}
+                            {% if request.user.username in article.get_list_user_likes %}
+                                <input class=" check-like-input article_rating" type="checkbox" value="" id="like_box" checked>
+                            {% else %}
 
                                 <input class="check-like-input article_rating" type="checkbox" value="" id="like_box" {% if request.user.is_anonymous %} disabled="disabled"{% endif %}>
 
-                        {% endif%}
+                            {% endif%}
 
-                          <label class="form-check-label" for="flexCheckDefault">
-                          </label><span style="font-size: 15px;"  id="like_num">{{article.get_likes}}</span>
+                            <label class="form-check-label" for="flexCheckDefault">
+                            </label><span style="font-size: 15px;"  id="like_num">{{article.get_likes}}</span>
                         </div>
                         <div class="form-check" style="float: left;">
                             {% if request.user.username in article.get_list_user_dislikes %}
-                            <input class="rotate_img check-like-input article_rating" type="checkbox" value="" id="dislike_box" checked>
-                             {% else %}
-                               <input class="rotate_img check-like-input article_rating" type="checkbox" value="" id="dislike_box" {% if request.user.is_anonymous %} disabled="disabled"{% endif %}>
+                                <input class="rotate_img check-like-input article_rating" type="checkbox" value="" id="dislike_box" checked>
+                            {% else %}
+                                <input class="rotate_img check-like-input article_rating" type="checkbox" value="" id="dislike_box" {% if request.user.is_anonymous %} disabled="disabled"{% endif %}>
                             {% endif%}
 
-
-                          <label class="form-check-label" for="flexCheckChecked">
-                          </label><span style="font-size: 15px;" id="dislike_num">{{article.get_dislikes}}</span>
+                            <label class="form-check-label" for="flexCheckChecked">
+                            </label><span style="font-size: 15px;" id="dislike_num">{{article.get_dislikes}}</span>
                         </div>
-                          </div>
-                    <div>
+                        <div class="form-check" style="float: left;">
+                            <h4>Рейтинг статьи:</h4>
+                        </div>
+                        <div class="form-check" style="float: left;">
+                            <h4 id="article_rating">{{ article.get_likes|sub:article.get_dislikes }}</h4>
+                        </div>
+
+
+                    </div>
+                        <div>
                         {% if request.user.is_authenticated %}
                             <form action="{% url 'articles:article_view' article.slug %}" method="POST">
                                 {% csrf_token %}
@@ -248,6 +256,7 @@
     $('.article_rating').click(function(e){
         var num_dislike = parseInt($('#dislike_num').html())
         var num_like = parseInt($('#like_num').html())
+        let article_rating = 0
         console.log('click')
 
 
@@ -266,6 +275,7 @@
                 var num_l = parseInt(num_like) - 1
                 $('#like_num').html(num_l)
             }
+            article_rating  = num_l - num_dislike
         }
 
         if(e['target']['id'] == 'dislike_box'){
@@ -284,8 +294,12 @@
                 var num_d = parseInt(num_dislike) - 1
                 $('#dislike_num').html(num_d)
             }
-
+           article_rating = num_like - num_d
         }
+
+        $('#article_rating').html(article_rating)
+
+
         $.ajax({
             type: "POST",
             url: "{% url 'articles:rating_add' article.pk %}",
