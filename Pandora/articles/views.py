@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.shortcuts import redirect
@@ -64,9 +66,9 @@ class ArticleDetailView(ContextDataMixin, DetailView):
                     new_comment.is_child = True
                     new_comment.parent_id = self.request.POST.get('parent')
                 new_comment.save()
-            return redirect('articles:article_view', slug=self.get_object().slug)
+            return HttpResponse(json.dumps(new_comment), content_type="application/json")
         else:
-            return HttpResponse(status=401)
+            return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}), content_type="application/json")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
