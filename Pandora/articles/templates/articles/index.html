@@ -13,30 +13,31 @@
                 <div id="head_content" style="    width: 400px;">
 
                     <div id="sorting" style="float: right;
-    margin-top: 16px; " >Сортировка:
+    margin-top: 16px; ">Сортировка:
 
-                        <select id="sorting_select"   style="width: 150px">
-                             <option selected="" class="desc data">Новые</option>
-                             <option class="asc data">Старые</option>
-                             <option class="desc rating">Популярные</option>
-                             <option class="desc comment">Обсуждаемые</option>
-                             <option class="asc like">Самое большое количество лайков</option>
+                        <select id="sorting_select" style="width: 150px">
+                            <option selected="" class="desc data">Новые</option>
+                            <option class="asc data">Старые</option>
+                            <option class="desc rating">Популярные</option>
+                            <option class="desc comment">Обсуждаемые</option>
+                            <option class="asc like">Самое большое количество лайков</option>
 
                         </select>
 
                     </div>
 
 
-                <h1>Все статьи</h1>
+                    <h1>Все статьи</h1>
                     <div class="row g-3 align-items-center">
-                      <div class="col-auto">
-                        <input type="search" id="search" style="width: 200px;
-    height: 20px;" class="form-control" >
-                      </div>
+                        <div class="col-auto">
+                            <input type="search" id="search" style="width: 200px;
+    height: 20px;" class="form-control">
+                        </div>
                         <button type="button" id="click_search" style="    width: 50px;
     height: 20px;display: flex;
     align-items: center;
-    justify-content: center;" class="btn btn-primary">Поиск</button>
+    justify-content: center;" class="btn btn-primary">Поиск
+                        </button>
                     </div>
                 </div>
 
@@ -53,13 +54,15 @@
                             </a></li>
                             <li>тематика: {{ item.category }}</li>
 
-                            <li>автор: <a href="{% url 'account:personal_data' item.author.pk %}">{{ item.author| is_role_user}}</a></li>
+                            <li>автор: <a
+                                    href="{% url 'account:personal_data' item.author.pk %}">{{ item.author| is_role_user }}</a>
+                            </li>
                             <li>дата публикации: {{ item.created_at }}</li>
                             <li>обновлено: {{ item.updated_at }}</li>
                             <li>просмотры: {{ item.views }}</li>
                         </ul>
                     </div>
-                    <p>{{ item.summary | safe}}</p>
+                    <p>{{ item.summary | safe }}</p>
 
                     <hr>
                 {% endfor %}
@@ -67,59 +70,59 @@
         </div>
     </div>
 
-          <script
-          src="https://code.jquery.com/jquery-3.6.0.slim.js"
-          integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY="
-          crossorigin="anonymous">
-        </script>
-<script>
-    var paramsString = document.location.search;
-    var searchParams = new URLSearchParams(paramsString);
+    <script
+            src="https://code.jquery.com/jquery-3.6.0.slim.js"
+            integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY="
+            crossorigin="anonymous">
+    </script>
+    <script>
+        var paramsString = document.location.search;
+        var searchParams = new URLSearchParams(paramsString);
 
-    let sort = searchParams.get("sorting");
-    let field = searchParams.get("field");
-    let search_field = searchParams.get("search");
-    console.log(sort, field)
-    $('#sorting_select option').each(function() {
-      if ($(this).hasClass(sort+' '+ field)){
-            $(this).prop('selected', true);
-      }
-    });
-    if (search_field){
-        $('#search').val(search_field)
+        let sort = searchParams.get("sorting");
+        let field = searchParams.get("field");
+        let search_field = searchParams.get("search");
+        console.log(sort, field)
+        $('#sorting_select option').each(function () {
+            if ($(this).hasClass(sort + ' ' + field)) {
+                $(this).prop('selected', true);
+            }
+        });
+        if (search_field) {
+            $('#search').val(search_field)
 
-    }
-
-
-    $('#sorting_select').change(function(e){
-        console.log('sort')
-        let location = document.location.href.split('?')[0]
-        let sorting_params = $('option:selected').attr('class').split(' ')
-        var url = new URL(location);
-        url.searchParams.append('sorting', sorting_params[0]);
-        url.searchParams.append('field', sorting_params[1]);
-        if (search_field){
-            url.searchParams.append('search', search_field);
         }
 
-        document.location.href = url
 
-    })
+        $('#sorting_select').change(function (e) {
+            console.log('sort')
+            let location = document.location.href.split('?')[0]
+            let sorting_params = $('option:selected').attr('class').split(' ')
+            var url = new URL(location);
+            url.searchParams.append('sorting', sorting_params[0]);
+            url.searchParams.append('field', sorting_params[1]);
+            if (search_field) {
+                url.searchParams.append('search', search_field);
+            }
 
-    $('#click_search').click(function(e){
-        let location = document.location.href.split('?')[0]
-        let search_val = $('#search').val()
-        var url = new URL(location);
-        if (sort){
-            url.searchParams.append('sorting', sort);
-        }
-        if (field){
-            url.searchParams.append('field', field);
-        }
-        url.searchParams.append('search', search_val);
-        document.location.href = url
-    })
+            document.location.href = url
 
-</script>
+        })
+
+        $('#click_search').click(function (e) {
+            let location = document.location.href.split('?')[0]
+            let search_val = $('#search').val()
+            var url = new URL(location);
+            if (sort) {
+                url.searchParams.append('sorting', sort);
+            }
+            if (field) {
+                url.searchParams.append('field', field);
+            }
+            url.searchParams.append('search', search_val);
+            document.location.href = url
+        })
+
+    </script>
 
 {% endblock %}

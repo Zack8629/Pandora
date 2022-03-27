@@ -2,7 +2,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseNotFound, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import DetailView, UpdateView, ListView
+from django.views.generic import DetailView, UpdateView
 from django.views.generic.base import View
 
 from articles.models import Articles
@@ -41,7 +41,7 @@ class ProperUserMixin:
 class AccountPersonalData(ContextDataMixin, DetailView):
     model = Author
     template_name = "account/account_personal_data.html"
-    page_title = 'Личный кабинет'
+    page_title = 'Личные данные'
 
     def get_context_data(self, **kwargs):
         pk = self.kwargs['pk']

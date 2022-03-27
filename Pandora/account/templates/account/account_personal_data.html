@@ -3,62 +3,29 @@
 {% block body %}
     <div id="main">
         <div id="content_header"></div>
-
-
-
         <div id="site_content">
-
-            {% include "inc-sidebar.html" %}
-
+            {% include "inc-sidebar_account.html" %}
             <div>
-
-                <div>
-
-                </div><h1>{{ page_title }}</h1>
-               {% if request.user.is_superuser%}
-                    {% if object.username == request.user.username%}
-                                <h1> <a href="{% url 'account:admin_account' object.pk%}">Аккаунт админа</a></h1>
-                    {% endif %}
-
-                {% endif %}
-
-               {% if request.user.is_moderator%}
-                    {% if object.username == request.user.username%}
-                                <h1> <a href="{% url 'account:moder_account' object.pk%}">Аккаунт модератора</a></h1>
-                    {% endif %}
-
-                {% endif %}
-
-                <h1><a href="{% url 'account:my_articles' object.pk 'published'%}">
-
-                    {% if object.username == request.user.username%}
-                        Мои статьи
-                    {% else %}
-                        Статьи автора
-                    {% endif %}
-
-
-                </a></h1>
-
-
-                <div class="card">
-                    <a href="{% url 'account:personal_data' object.pk %}">
-                    Личные данные
-                </a>
-                  <div class="card-body">
-
-                    <h2>Имя пользователя: {{ object.username }}</h2>
-                    <h3>E-mail: {{ object.email }}</h3>
-                    <h3>Имя: {{ object.first_name }}</h3>
-                    <h3>Фамилия: {{ object.last_name }}</h3>
-                    <h3>Дата рождения: {{ object.birthday }}</h3>
-                    <h3>О себе: {{ object.about_me }}</h3>
-                  </div>
-                </div>
+                <div></div>
+                <h1>{{ page_title }} пользователя {{ object.username }}</h1>
 
                 {% if object.username == request.user.username %}
-                <h4><a href="{% url 'account:update' pk=object.pk %}">Редактировать профиль</a></h4>
+                    <h4><a href="{% url 'account:update' pk=object.pk %}">Редактировать профиль</a>
+                    </h4>
                 {% endif %}
+
+                <div class="card">
+                    <div class="card-body">
+                        <h2>Имя пользователя: {{ object.username }}</h2>
+                        <h3>E-mail: {{ object.email }}</h3>
+                        <h3>Имя: {{ object.first_name }}</h3>
+                        <h3>Фамилия: {{ object.last_name }}</h3>
+                        <h3>Дата рождения: {{ object.birthday }}</h3>
+                        <h3>О себе: {{ object.about_me }}</h3>
+                    </div>
+                </div>
+
+
             </div>
             <!--      <div id="banner"></div>-->
         </div>

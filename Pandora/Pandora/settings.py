@@ -37,10 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 3rd party apps
     'tinymce',
-    'articles.apps.ArticlesConfig',
-    'account',
     'mathfilters',
+    # Local apps
+    'account',
+    'articles.apps.ArticlesConfig',
 ]
 
 MIDDLEWARE = [

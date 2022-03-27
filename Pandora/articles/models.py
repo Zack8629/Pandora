@@ -99,12 +99,10 @@ class Articles(models.Model, Rating):
             self.slug = gen_slug(self.title, model_type='articles')
         super().save(*args, **kwargs)
 
-
     class Meta:
         verbose_name = "Статья"
         verbose_name_plural = "Статьи"
         ordering = ["-created_at"]
-
 
 
 class Comment(models.Model, Rating):
