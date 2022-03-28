@@ -73,9 +73,16 @@ class ModeratorAccountView(ContextDataMixin, DetailView):
     template_name = "account/moderator_account.html"
     page_title = 'Личный кабинет модератора'
 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['articles_view'] = Articles.moderation_article()
+        type_template = self.kwargs.get('type')
+        context['type_context'] = type_template
+        if type_template == 'moder_article':
+            context['articles_view'] = Articles.moderation_article()
+        if type_template == 'moder_user':
+            context['users'] = Author.objects.all()
+
         return context
 
     def dispatch(self, request, *args, **kwargs):
@@ -90,7 +97,7 @@ class NotApproveMessage(CreateView):
     template_name = 'account/moderation_message_form.html'
 
     def get_success_url(self):
-        return reverse_lazy('account:moder_account', kwargs={'pk': self.kwargs.get('id_moder')})
+        return reverse_lazy('account:moder_account', kwargs={'type': 'moder_article','pk': self.kwargs.get('id_moder')})
 
     def form_valid(self, form, *args, **kwargs):
         form.save(commit=False)
@@ -120,6 +127,19 @@ def approve_moder_article(request, type=None, pk=None):
                     article.save()
         return JsonResponse({})
 
+def block_user_view(request, pk=None):
+    if request.method == 'GET':
+        if request.user.is_superuser or request.user.is_moderator:
+            if pk is not None:
+                author = Author.objects.filter(pk=pk).first()
+                if author:
+                    if not author.is_superuser or not request.user.is_moderator:
+                        if author.is_active:
+                            author.is_active = False
+                        else:
+                            author.is_active = True
+                        author.save()
+        return JsonResponse({})
 
 def give_rights_moderator(request, pk=None):
     if request.method == 'GET':
