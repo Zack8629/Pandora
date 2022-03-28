@@ -55,8 +55,27 @@ class Rating:
         return dislikes
 
 
+class ErrorMessageModeration(models.Model):
+    create_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    text_message = models.TextField(verbose_name="Текст сообщения")
+    author = models.ForeignKey(Author, on_delete=models.PROTECT, verbose_name="Автор")
+    is_active = models.BooleanField(default=True, verbose_name="Активные")
+
+
 class Articles(models.Model, Rating):
     """We create articles with the necessary fields and categories"""
+
+    MODERATION = 'moderation'
+    ERROR_MODERATION = 'error_moderation'
+    NOT_MODERATION = "not_moderation"
+
+
+    STATUS_CHOICES = (
+        (MODERATION, 'На модерации'),
+        (ERROR_MODERATION, 'Не прошедший модерацию'),
+        (NOT_MODERATION, "Не на модерации"),
+    )
+
     title = models.CharField(max_length=150, db_index=True, verbose_name="Заголовок")
     summary = models.TextField(verbose_name="Описание")
     content = HTMLField(verbose_name="Контент")
@@ -73,19 +92,30 @@ class Articles(models.Model, Rating):
     views = models.IntegerField(default=0, verbose_name='Просмотры')
     quantity_comment = models.IntegerField(default=0, verbose_name='Количество коментариев')
 
-    for_moderation = models.BooleanField(default=False, verbose_name="На модерации")
+    # for_moderation = models.BooleanField(default=False, verbose_name="На модерации")
+    for_moderation = models.CharField(choices=STATUS_CHOICES, default=NOT_MODERATION, blank=True, null=True, max_length=100)
+    message_moderation = models.ManyToManyField(ErrorMessageModeration, verbose_name="Сообщения от модератора", blank=True)
 
     @staticmethod
     def author_published_article(pk):
-        return Articles.objects.filter(author=pk, published=True, for_moderation=False)
+        return Articles.objects.filter(author=pk, published=True, for_moderation=Articles.NOT_MODERATION)
 
     @staticmethod
     def author_draft_article(pk):
-        return Articles.objects.filter(author=pk, published=False, for_moderation=False)
+        return Articles.objects.filter(author=pk, published=False, for_moderation=Articles.NOT_MODERATION)
 
     @staticmethod
     def author_moderation_article(pk):
-        return Articles.objects.filter(author=pk, published=False, for_moderation=True)
+        return Articles.objects.filter(author=pk, published=False, for_moderation=Articles.MODERATION)
+    
+    @staticmethod
+    def author_error_moderation_article(pk):
+        return Articles.objects.filter(author=pk, published=False, for_moderation=Articles.ERROR_MODERATION)
+
+    @staticmethod
+    def moderation_article():
+        return Articles.objects.filter(for_moderation=Articles.MODERATION)
+
 
     def add_views(self):
         self.views += 1

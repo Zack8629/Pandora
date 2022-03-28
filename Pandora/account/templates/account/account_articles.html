@@ -30,11 +30,14 @@
                        <a href="{% url 'account:my_articles' object.pk 'moderation'%}">
                      На модерации
                 </a>
-
+                      <a href="{% url 'account:my_articles' object.pk 'error_moderation'%}">
+                    Не прошедшие модерацию
+                </a>
 
                       <a href="{% url 'account:my_articles' object.pk 'draft'%}">
                     Черновики
                 </a>
+
 
                   </div>
                 </div>

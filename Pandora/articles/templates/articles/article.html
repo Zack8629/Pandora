@@ -10,7 +10,6 @@
             <div id="">
                 <div id="content">
                     <!-- insert the page content here -->
-
                     <hr>
                     <div style="display:flex; flex-direction: row; justify-content: left; align-items: center">
                         <img src="{{article.image.url}}" alt="" class="prod-size" style="width:150px;height:150px;">
@@ -32,12 +31,32 @@
                             </li>
                             {% if request.user == article.author or request.user.is_superuser or request.user.is_moderator %}
                                 <li><a href="{% url 'articles:delete_article' article.slug%}">Удалить</a>
+                                     {% if article.for_moderation != "moderation"%}
                                     <a href="{% url 'articles:update_article' article.slug%}">Редактировать</a></li>
+                                    {% endif %}
                             {% endif %}
                         </ul>
                     </div>
                     <p>{{article.content | safe}}</p>
 
+            {% if article.published == False %}
+                {% if article.for_moderation == "error_moderation" or article.for_moderation == "not_moderation" %}
+                    <h4>Коментарии модератора</h4>
+                        {% for message in article.message_moderation.all%}
+                            {% if message.is_active == True%}
+                        <div class="card my-2">
+                            <h5 class="card-header"><span class="badge bg-secondary">{{message.author}}</span> | {{message.create_at}}
+                            </h5>
+                            <div class="card-body">
+                                <p class="card-text">{{message.text_message}}</p>
+
+                            </div>
+                        </div>
+                            {% endif %}
+                        {% endfor%}
+
+                    {% endif %}
+                 {% endif %}
                     {% if article.published %}
                     <div class="check_box" style="display: inline-block; margin-bottom: 10px;">
                         <div class="form-check" style="float: left;">
@@ -88,6 +107,9 @@
                         Чтобы оставлять комментарии необходимо <a href="{% url 'account:login' %}">авторизоваться</a>.
                     {% endif %}
                 </div>
+
+
+            {% if article.published%}
                 {% if article.comments %}
                     {% for comment in article.comments.all %}
                         {% if not comment.is_child %}
@@ -173,6 +195,7 @@
                     {% endfor %}
                 {% endif %}
             {% endif %}
+          {% endif %}
             </div>
 
             </div>

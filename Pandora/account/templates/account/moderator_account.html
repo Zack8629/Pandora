@@ -33,8 +33,9 @@
                             <a class='approve' id='moder_{{article.id}}' href="#">Одобрить</a></td>
                         </td>
                         <td>
-                            <a class='not_approve' id='moder_{{article.id}}' href="#">Не одобрить</a></td>
+                            <a class='not_approve_url' href="{% url 'account:not_approve_moder' object.pk article.id %}">Не одобрить</a></td>
                         </td>
+
                     </tr>
                   {% endfor%}
                   </tbody>
