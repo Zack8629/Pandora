@@ -3,14 +3,12 @@
 {% block body %}
     <div id="main">
         <div id="content_header"></div>
-
-
-
         <div id="site_content">
-
-            {% include "inc-sidebar.html" %}
-
+            {% include "inc-sidebar_account.html" %}
             <div>
+                <div></div>
+                <h1>{{ page_title }} пользователя {{ object.username }}</h1>
+
 
                 <div>
 
@@ -30,21 +28,11 @@
                                 <h1> <a href="{% url 'account:moder_account' 'moder_article'  object.pk%}">Аккаунт модератора</a></h1>
                     {% endif %}
 
+
                 {% endif %}
 
-                <h1><a href="{% url 'account:my_articles' object.pk 'published'%}">
-
-                    {% if object.username == request.user.username%}
-                        Мои статьи
-                    {% else %}
-                        Статьи автора
-                    {% endif %}
-
-
-                </a></h1>
-
-
                 <div class="card">
+
 
                   <div class="card-body">
 
@@ -66,6 +54,7 @@
                   <h1>Заблокирован</h1>
 
                 {% endif %}
+
             </div>
             <!--      <div id="banner"></div>-->
         </div>

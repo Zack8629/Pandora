@@ -39,14 +39,12 @@ def sorting_articles(**kwargs):
 
 
 def search_article(value, query):
-
     if value is not None:
-
 
         query = query.filter(
             Q(title__icontains=value) |
             Q(summary__icontains=value) |
-            Q(author__username__icontains=value)|
+            Q(author__username__icontains=value) |
             Q(category__title__icontains=value)
 
         )
