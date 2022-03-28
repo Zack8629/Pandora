@@ -106,7 +106,7 @@ class CreateArticlesView(ContextDataMixin, SuccessMessageMixin, CreateView):
         form.instance.author = author
         published = form.cleaned_data['published']
         if published:
-            form.instance.for_moderation = True
+            form.instance.for_moderation = Articles.MODERATION
             form.instance.published = False
         form.save()
         return super(CreateArticlesView, self).form_valid(form)
@@ -149,9 +149,11 @@ class UpdateArticlesView(ContextDataMixin, PermissionUserMixin, SuccessMessageMi
         form.save(commit=False)
         new_published = form.cleaned_data.get('published')
         if new_published:
-            form.instance.for_moderation = True
+            form.instance.for_moderation = Articles.MODERATION
             form.instance.published = False
-
+        else:
+            form.instance.for_moderation = Articles.NOT_MODERATION
+            form.instance.published = False
         form.save()
         return super(UpdateArticlesView, self).form_valid(form)
 
@@ -159,8 +161,7 @@ class UpdateArticlesView(ContextDataMixin, PermissionUserMixin, SuccessMessageMi
         return reverse_lazy('articles:article_view', kwargs={'slug': self.get_object().slug})
 
     def dispatch(self, request, *args, **kwargs):
-        super(UpdateArticlesView, self).dispatch(request, *args, **kwargs)
-        if self.get_object().for_moderation:
+        if self.get_object().for_moderation == Articles.MODERATION:
             return HttpResponseNotFound()
         return super(UpdateArticlesView, self).dispatch(request, *args, **kwargs)
 

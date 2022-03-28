@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <div id="main">
+        <div id="content_header"></div>
+        <div id="site_content">
+            <div id>
+                <div id="content">
+                    <form method="post" >{% csrf_token %}
+                        {{ form.as_p }}
+                        <input type="hidden" name="next" value="/"/>
+                       <button type="submit" class="btn btn-primary mb-2">Сохранить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

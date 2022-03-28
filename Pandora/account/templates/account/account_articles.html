@@ -11,35 +11,37 @@
                         Мои статьи
                     {% else %}
                         Статьи автора
-                    {% endif %}
 
-                    {% if type == 'published' %}
-                        опубликованные
-                    {% elif type == 'moderation' %}
-                        на модерации
-                    {% elif type == 'draft' %}
-                        черновики
-                    {% endif %}
-                </h1>
+                    {% endif %}</h1>
+                {% if object.username == request.user.username%}
+                    <h3><a href="{% url 'articles:create_articles' %}">Создать статью</a></h3>
+                {% endif %}
 
-                {% if object.username == request.user.username %}
-                    <div class="card">
-                        <div class="card-body">
-                            <a href="{% url 'account:my_articles' object.pk 'published' %}"
-                               style="margin-right:7px">
-                                Опубликованные
-                            </a>
-                            <a href="{% url 'account:my_articles' object.pk 'moderation' %}"
-                               style="margin-right:7px">
-                                На модерации
-                            </a>
+                <a href="{% url 'account:personal_data' object.pk %}">
+                    Назад
+                </a>
+                {% if object.username == request.user.username%}
+                <div class="card">
+                  <div class="card-body">
+                      <a href="{% url 'account:my_articles' object.pk 'published'%}">
+                          Опубликованные
+                    </a>
 
-                            <a href="{% url 'account:my_articles' object.pk 'draft' %}"
-                               style="margin-right:7px">
-                                Черновики
-                            </a>
-                        </div>
-                    </div>
+                       <a href="{% url 'account:my_articles' object.pk 'moderation'%}">
+                     На модерации
+                </a>
+                      <a href="{% url 'account:my_articles' object.pk 'error_moderation'%}">
+                    Требует исправления
+                </a>
+
+                      <a href="{% url 'account:my_articles' object.pk 'draft'%}">
+                    Черновики
+                </a>
+
+
+                  </div>
+                </div>
+
                 {% endif %}
 
                 {% for item in articles %}
