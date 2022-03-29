@@ -9,7 +9,7 @@
                     {% endif %}
 
                     {% if request.user.is_moderator and object.username == request.user.username %}
-                        <a href="{% url 'account:moder_account' object.pk %}">Панель модератора</a>
+                        <a href="{% url 'account:moder_account' 'moder_article' object.pk %}">Панель модератора</a>
                     {% endif %}
                 </li>
                 <li>

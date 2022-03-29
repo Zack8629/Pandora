@@ -13,23 +13,10 @@
                 <div>
 
                 </div>
-                <h1>{{ page_title }}</h1>
+
                {% if  object.is_active == True %}
 
-               {% if request.user.is_superuser%}
-                    {% if object.username == request.user.username%}
-                                <h1> <a href="{% url 'account:admin_account' object.pk%}">Аккаунт админа</a></h1>
-                    {% endif %}
 
-                {% endif %}
-
-               {% if request.user.is_moderator%}
-                    {% if object.username == request.user.username%}
-                                <h1> <a href="{% url 'account:moder_account' 'moder_article'  object.pk%}">Аккаунт модератора</a></h1>
-                    {% endif %}
-
-
-                {% endif %}
 
                 <div class="card">
 
