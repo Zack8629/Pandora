@@ -1,7 +1,7 @@
 import json
 
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, CreateView, DeleteView, UpdateView, ListView
@@ -136,6 +136,16 @@ class DeleteArticlesView(ContextDataMixin, PermissionUserMixin, SuccessMessageMi
 
     def get_success_url(self):
         return reverse_lazy('account:personal_data', kwargs={'pk': self.request.user.pk})
+
+
+class DeleteCommentView(ContextDataMixin, SuccessMessageMixin, DeleteView):
+    model = Comment
+    template_name = 'articles/comment_delete.html'
+    page_title = 'Удаление комментария'
+    success_message = 'Комментарий успешно удален'
+
+    def get_success_url(self):
+        return reverse_lazy('articles:article_view', kwargs={'slug': self.get_object().article.slug})
 
 
 class UpdateArticlesView(ContextDataMixin, PermissionUserMixin, SuccessMessageMixin, UpdateView):
