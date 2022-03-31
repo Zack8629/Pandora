@@ -21,4 +21,5 @@ urlpatterns = [
     path('approve/<str:type>/<int:pk>/', account.approve_moder_article, name='approve_moder'),
     path('notapprove/<int:id_moder>/<int:article_id>/', account.NotApproveMessage.as_view(), name='not_approve_moder'),
     path('block_user/<int:pk>/', account.block_user_view, name='block_user'),
+    path('moderatoraccount/moder_user/<int:pk>/update_rating/', account.rating_change, name='rating_change'),
 ]

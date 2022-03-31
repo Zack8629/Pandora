@@ -207,3 +207,8 @@ class AccountUpdateView(ContextDataMixin, ProperUserMixin, SuccessMessageMixin, 
 
     def get_success_url(self):
         return reverse_lazy('account:personal_data', kwargs={'pk': self.request.user.pk})
+
+
+def rating_change(request, pk=None):
+    print("rating changed", pk)
+    return render('account/moderator_account.html')

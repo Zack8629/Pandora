@@ -72,6 +72,8 @@
                       <th scope="col" style="color: black;">Имя</th>
                       <th scope="col" style="color: black;">Фамилия</th>
                       <th scope="col" style="color: black;">Роль</th>
+                      <th scope="col" style="color: black;">рейтинг</th>
+                        <th scope="col" style="color: black;"> </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -87,11 +89,23 @@
                           {% if user.is_superuser %}
                                 admin
                           {% elif user.is_moderator%}
-                                moderator
+                              moderator
                           {% else %}
-                                пользователь
+                              пользователь
                           {% endif %}
                       </td>
+                        <td>
+                            <input type="number" id="rating_update" min="1" max="10" value={{user.rating}}>
+                        </td>
+                        <td>
+                            <form method="post" action="update_rating/" class="inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="extra_submit_param" value="extra_submit_value">
+                                <button type="submit" name="submit_param" value="submit_value" class="link-button">
+                                    update
+                                </button>
+                            </form>
+                        </td>
                         <td>
                         {% if user.is_superuser%}
 
