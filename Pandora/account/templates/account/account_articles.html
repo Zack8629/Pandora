@@ -4,25 +4,53 @@
     <div id="main">
         <div id="content_header"></div>
         <div id="site_content">
-            {% include "inc-sidebar.html" %}
+            {% include "inc-sidebar_account.html" %}
             <div>
-                <a href="{% url 'account:personal_data' request.user.pk %}">
-                    личные данные
+                <h1>
+                    {% if object.username == request.user.username %}
+                        Мои статьи
+                    {% else %}
+                        Статьи автора
+
+                    {% endif %}</h1>
+                {% if object.username == request.user.username%}
+                    <h3><a href="{% url 'articles:create_articles' %}">Создать статью</a></h3>
+                {% endif %}
+
+                <a href="{% url 'account:personal_data' object.pk %}">
+                    Назад
                 </a>
-                <div></div>
-                <a href="{% url 'account:my_articles' request.user.pk %}">
-                    мои статьи
+                {% if object.username == request.user.username%}
+                <div class="card">
+                  <div class="card-body">
+                      <a href="{% url 'account:my_articles' object.pk 'published'%}">
+                          Опубликованные
+                    </a>
+
+                       <a href="{% url 'account:my_articles' object.pk 'moderation'%}">
+                     На модерации
+                </a>
+                      <a href="{% url 'account:my_articles' object.pk 'error_moderation'%}">
+                    Требует исправления
                 </a>
 
-                <h3><a href="{% url 'articles:create_articles' %}">Создать статью</a></h3>
-                <h2>Статьи автора:</h2>
+                      <a href="{% url 'account:my_articles' object.pk 'draft'%}">
+                    Черновики
+                </a>
+
+
+                  </div>
+                </div>
+
+                {% endif %}
+
                 {% for item in articles %}
                     <a href="{% url 'articles:article_view' slug=item.slug %}">
                         <h4>{{ item.title }}</h4>
                     </a>
                     <h5>дата публикации:{{ item.created_at }}</h5>
                     <h5>тематика: {{ item.category }}</h5>
-                    <p>{{ item.summary | safe}}</p>
+                    <p>{{ item.summary | safe }}</p>
                 {% endfor %}
             </div>
             <!--      <div id="banner"></div>-->

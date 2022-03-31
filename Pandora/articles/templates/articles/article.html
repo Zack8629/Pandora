@@ -1,5 +1,6 @@
 {%extends "base.html" %}
-
+{% load role_tag %}
+{% load mathfilters %}
 {% block body %}
     <div id="main">
         <div id="content_header"></div>
@@ -9,7 +10,6 @@
             <div id="">
                 <div id="content">
                     <!-- insert the page content here -->
-
                     <hr>
                     <div style="display:flex; flex-direction: row; justify-content: left; align-items: center">
                         <img src="{{article.image.url}}" alt="" class="prod-size" style="width:150px;height:150px;">
@@ -17,7 +17,7 @@
                         <ul>
                             <li><h1>{{article.title}}</h1></li>
                             <li>тематика: {{article.category}}</li>
-                            <li>автор: {{article.author}}</li>
+                            <li>автор: <a href="{% url 'account:personal_data' article.author.pk %}">{{ article.author| is_role_user}}</a></li>
                             <li>дата создания: {{article.created_at}}</li>
                             <li>обновлено: {{article.updated_at}}</li>
                             <li>просмотры: {{article.views}}</li>
@@ -31,41 +31,69 @@
                             </li>
                             {% if request.user == article.author or request.user.is_superuser or request.user.is_moderator %}
                                 <li><a href="{% url 'articles:delete_article' article.slug%}">Удалить</a>
+                                     {% if article.for_moderation != "moderation"%}
                                     <a href="{% url 'articles:update_article' article.slug%}">Редактировать</a></li>
+                                    {% endif %}
                             {% endif %}
                         </ul>
                     </div>
                     <p>{{article.content | safe}}</p>
 
+            {% if article.published == False %}
+                {% if article.for_moderation == "error_moderation" or article.for_moderation == "not_moderation" %}
+                    <h4>Коментарии модератора</h4>
+                        {% for message in article.message_moderation.all%}
+                            {% if message.is_active == True%}
+                        <div class="card my-2">
+                            <h5 class="card-header"><span class="badge bg-secondary">{{message.author}}</span> | {{message.create_at}}
+                            </h5>
+                            <div class="card-body">
+                                <p class="card-text">{{message.text_message}}</p>
+
+                            </div>
+                        </div>
+                            {% endif %}
+                        {% endfor%}
+
+                    {% endif %}
+                 {% endif %}
+                 {% if article.published %}
                     <div class="check_box" style="display: inline-block; margin-bottom: 10px;">
                         <div class="form-check" style="float: left;">
 
-                        {% if request.user.username in article.get_list_user_likes %}
-                            <input class=" check-like-input article_rating" type="checkbox" value="" id="like_box" checked>
-                         {% else %}
+                            {% if request.user.username in article.get_list_user_likes %}
+                                <input class=" check-like-input article_rating" type="checkbox" value="" id="like_box" checked>
+                            {% else %}
 
                                 <input class="check-like-input article_rating" type="checkbox" value="" id="like_box" {% if request.user.is_anonymous %} disabled="disabled"{% endif %}>
 
-                        {% endif%}
+                            {% endif%}
 
-                          <label class="form-check-label" for="flexCheckDefault">
-                          </label><span style="font-size: 15px;"  id="like_num">{{article.get_likes}}</span>
+                            <label class="form-check-label" for="flexCheckDefault">
+                            </label><span style="font-size: 15px;"  id="like_num">{{article.get_likes}}</span>
                         </div>
                         <div class="form-check" style="float: left;">
                             {% if request.user.username in article.get_list_user_dislikes %}
-                            <input class="rotate_img check-like-input article_rating" type="checkbox" value="" id="dislike_box" checked>
-                             {% else %}
-                               <input class="rotate_img check-like-input article_rating" type="checkbox" value="" id="dislike_box" {% if request.user.is_anonymous %} disabled="disabled"{% endif %}>
+                                <input class="rotate_img check-like-input article_rating" type="checkbox" value="" id="dislike_box" checked>
+                            {% else %}
+                                <input class="rotate_img check-like-input article_rating" type="checkbox" value="" id="dislike_box" {% if request.user.is_anonymous %} disabled="disabled"{% endif %}>
                             {% endif%}
 
-
-                          <label class="form-check-label" for="flexCheckChecked">
-                          </label><span style="font-size: 15px;" id="dislike_num">{{article.get_dislikes}}</span>
+                            <label class="form-check-label" for="flexCheckChecked">
+                            </label><span style="font-size: 15px;" id="dislike_num">{{article.get_dislikes}}</span>
                         </div>
-                          </div>
-                    <div>
+                        <div class="form-check" style="float: left;">
+                            <h4>Рейтинг статьи:</h4>
+                        </div>
+                        <div class="form-check" style="float: left;">
+                            <h4 id="article_rating">{{ article.get_likes|sub:article.get_dislikes }}</h4>
+                        </div>
+
+
+                    </div>
+                        <div>
                         {% if request.user.is_authenticated %}
-                            <form action="{% url 'articles:article_view' article.slug %}" method="POST">
+                            <form id="post-form" action="{% url 'articles:article_view' article.slug %}" method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" id="commentParent" value="" name="parent">
                                 <h4>Комментарии:</h4>
@@ -79,12 +107,15 @@
                         Чтобы оставлять комментарии необходимо <a href="{% url 'account:login' %}">авторизоваться</a>.
                     {% endif %}
                 </div>
+
+
+            {% if article.published%}
                 {% if article.comments %}
                     {% for comment in article.comments.all %}
                         {% if not comment.is_child %}
 
                         <div class="card my-2">
-                            <h5 class="card-header"><span class="badge bg-secondary">{{ comment.user.username }}</span> | {{ comment.created_at }}
+                            <h5 class="card-header"><span class="badge bg-secondary">{{ comment.user.username| is_role_user }}</span> | {{ comment.created_at }} | {% if request.user.is_moderator%}<a href="{% url 'articles:delete_comment' comment.id%}">Удалить</a>{% endif %}</h5>
                             <div class="check_box" style="display: inline-block; margin-bottom: 10px;">
                         <div class="form-check" style="float: left;">
 
@@ -124,7 +155,7 @@
                             {% if comment.child_comments %}
                                 {% for child_comment in comment.child_comments.all %}
                                     <div class="card my-2 ml-2" style="margin-left: 50px;">
-                                        <h5 class="card-header"><span class="badge bg-secondary">{{ comment.user.username }}</span> | {{ comment.created_at }}
+                                        <div class="card-header"><span class="badge bg-secondary">{{ comment.user.username| is_role_user }}</span> | {{ comment.created_at }} | {% if request.user.is_moderator%}<a href="{% url 'articles:delete_comment' comment.id%}">Удалить</a>{% endif %}</div>
                                          <div class="check_box" style="display: inline-block; margin-bottom: 10px;">
                         <div class="form-check" style="float: left;">
 
@@ -152,7 +183,7 @@
                         </div>
                           </div></h5>
                                         <div class="card-body">
-                                            <h5 class="card-title">Ответ пользователю {{ comment.user.username }}
+                                            <h5 class="card-title">Ответ пользователю {{ comment.user.username | is_role_user}}
 
                                             </h5>
                                             <p class="card-text">{{ child_comment.text }}</p>
@@ -163,7 +194,8 @@
                         {% endif %}
                     {% endfor %}
                 {% endif %}
-
+            {% endif %}
+          {% endif %}
             </div>
 
             </div>
@@ -247,6 +279,7 @@
     $('.article_rating').click(function(e){
         var num_dislike = parseInt($('#dislike_num').html())
         var num_like = parseInt($('#like_num').html())
+        let article_rating = 0
         console.log('click')
 
 
@@ -265,6 +298,7 @@
                 var num_l = parseInt(num_like) - 1
                 $('#like_num').html(num_l)
             }
+            article_rating  = num_l - num_dislike
         }
 
         if(e['target']['id'] == 'dislike_box'){
@@ -283,8 +317,12 @@
                 var num_d = parseInt(num_dislike) - 1
                 $('#dislike_num').html(num_d)
             }
-
+           article_rating = num_like - num_d
         }
+
+        $('#article_rating').html(article_rating)
+
+
         $.ajax({
             type: "POST",
             url: "{% url 'articles:rating_add' article.pk %}",

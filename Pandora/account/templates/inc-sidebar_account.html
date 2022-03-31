@@ -1,0 +1,53 @@
+<div id="sidebar_container">
+    <div class="sidebar">
+        <div class="sidebar_top"></div>
+        <div class="sidebar_item">
+            <ul>
+                <li>
+                    {% if request.user.is_superuser and object.username == request.user.username %}
+                        <a href="{% url 'account:admin_account' object.pk %}">Панель админа</a>
+                    {% endif %}
+
+                    {% if request.user.is_moderator and object.username == request.user.username %}
+                        <a href="{% url 'account:moder_account' 'moder_article' object.pk %}">Панель модератора</a>
+                    {% endif %}
+                </li>
+                <li>
+                    <a href="{% url 'account:personal_data' object.pk %}">
+                        Личные данные
+                    </a>
+                </li>
+                <li>
+                    {% if object.username == request.user.username %}
+                        <a href="{% url 'articles:create_articles' %}">Создать статью</a>
+                    {% endif %}
+                </li>
+                <li>
+                    <a href="{% url 'account:my_articles' object.pk 'published' %}">
+                        {% if object.username == request.user.username %}
+                            Мои статьи
+                        {% else %}
+                            Статьи автора
+                        {% endif %}
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+        <div class="sidebar_base"></div>
+    </div>
+    <div class="sidebar">
+        <div class="sidebar_top"></div>
+        <div class="sidebar_item">
+            <h3>Тематики</h3>
+            <ul>
+                {% for el_categories in categories %}
+                    <li><a href="{% url 'articles:category_view' slug=el_categories.slug %}">
+                        {{ el_categories.title }}
+                    </a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="sidebar_base"></div>
+    </div>
+</div>

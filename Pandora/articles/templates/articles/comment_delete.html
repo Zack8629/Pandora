@@ -9,7 +9,7 @@
             {% include "inc-sidebar.html" %}
             <div>
                 <form action="" method="post">{% csrf_token %}
-                    <p>Вы уверены удалить статью "{{ object.title }}"?</p>
+                    <p>Вы уверены, что хотите удалить комментарий "{{ object.text }}"?</p>
                     <button type="submit">Удалить</button>
                 </form>
             </div>

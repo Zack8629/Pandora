@@ -27,5 +27,3 @@ def like_dislike(type_obj, username, pk, likes, dislikes):
     user = Author.objects.get(username=username)
     object = type_object[type_obj](pk=pk)
     like_dislike_rating(object, user, likes, dislikes)
-
-

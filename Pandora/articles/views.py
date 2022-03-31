@@ -1,5 +1,7 @@
+import json
+
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, CreateView, DeleteView, UpdateView, ListView
@@ -46,13 +48,6 @@ class ArticlesListView(ContextDataMixin, ListView):
             return sorting_articles(**get_params)
         super(ArticlesListView, self).get_ordering()
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['categories'] = get_all_categories()
-        if self.page_title is not None:
-            context['page_title'] = self.page_title
-        return context
-
 
 class ArticleDetailView(ContextDataMixin, DetailView):
     model = Articles
@@ -71,15 +66,28 @@ class ArticleDetailView(ContextDataMixin, DetailView):
                     new_comment.is_child = True
                     new_comment.parent_id = self.request.POST.get('parent')
                 new_comment.save()
-            return redirect('articles:article_view', slug=self.get_object().slug)
-        else:
-            return HttpResponse(status=401)
+                return redirect('articles:article_view', slug=self.get_object().slug)
+            else:
+                return HttpResponse(status=401)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         comment_form = CommentCreateForm()
         context['comment_form'] = comment_form
         return context
+
+    def dispatch(self, request, *args, **kwargs):
+
+        if self.request.user.is_authenticated:
+            if self.request.user.pk == self.get_object().author.pk:
+                return super(ArticleDetailView, self).dispatch(request, *args, **kwargs)
+            if self.request.user.is_superuser or self.request.user.is_moderator:
+                return super(ArticleDetailView, self).dispatch(request, *args, **kwargs)
+
+        if not self.get_object().published:
+            return HttpResponseNotFound()
+
+        return super(ArticleDetailView, self).dispatch(request, *args, **kwargs)
 
 
 class CreateArticlesView(ContextDataMixin, SuccessMessageMixin, CreateView):
@@ -96,6 +104,10 @@ class CreateArticlesView(ContextDataMixin, SuccessMessageMixin, CreateView):
         form.save(commit=False)
         author = self.request.user
         form.instance.author = author
+        published = form.cleaned_data['published']
+        if published:
+            form.instance.for_moderation = Articles.MODERATION
+            form.instance.published = False
         form.save()
         return super(CreateArticlesView, self).form_valid(form)
 
@@ -123,7 +135,17 @@ class DeleteArticlesView(ContextDataMixin, PermissionUserMixin, SuccessMessageMi
     success_message = 'Статья успешна удалена'
 
     def get_success_url(self):
-        return reverse_lazy('account:account', kwargs={'pk': self.request.user.pk})
+        return reverse_lazy('account:personal_data', kwargs={'pk': self.request.user.pk})
+
+
+class DeleteCommentView(ContextDataMixin, SuccessMessageMixin, DeleteView):
+    model = Comment
+    template_name = 'articles/comment_delete.html'
+    page_title = 'Удаление комментария'
+    success_message = 'Комментарий успешно удален'
+
+    def get_success_url(self):
+        return reverse_lazy('articles:article_view', kwargs={'slug': self.get_object().article.slug})
 
 
 class UpdateArticlesView(ContextDataMixin, PermissionUserMixin, SuccessMessageMixin, UpdateView):
@@ -133,8 +155,25 @@ class UpdateArticlesView(ContextDataMixin, PermissionUserMixin, SuccessMessageMi
     success_message = 'Статья успешно изменена'
     model = Articles
 
+    def form_valid(self, form, *args, **kwargs):
+        form.save(commit=False)
+        new_published = form.cleaned_data.get('published')
+        if new_published:
+            form.instance.for_moderation = Articles.MODERATION
+            form.instance.published = False
+        else:
+            form.instance.for_moderation = Articles.NOT_MODERATION
+            form.instance.published = False
+        form.save()
+        return super(UpdateArticlesView, self).form_valid(form)
+
     def get_success_url(self):
         return reverse_lazy('articles:article_view', kwargs={'slug': self.get_object().slug})
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.get_object().for_moderation == Articles.MODERATION:
+            return HttpResponseNotFound()
+        return super(UpdateArticlesView, self).dispatch(request, *args, **kwargs)
 
 
 def rating_add(request, pk=None):

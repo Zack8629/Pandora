@@ -7,6 +7,13 @@ class CommentCreateForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['text']
+        widgets = {
+            'text': forms.TextInput(attrs={
+                'id': 'post-text',
+                'required': True,
+                'placeholder': 'Say something...'
+            }),
+        }
 
 
 class ArticleForm(forms.ModelForm):
