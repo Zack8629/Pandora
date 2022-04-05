@@ -1,4 +1,4 @@
-Сайт в формате блогов, созданный для публикации новостей, статей, мыслей. 
+# Сайт в формате блогов, созданный для публикации новостей, статей, мыслей. 
 
 # Запуск базы данных:
 ./Pandora
@@ -10,6 +10,6 @@
 3) python manage.py makemigrations
 5) python manage.py migrate
 7) python manage.py loaddata fixture/data.json
-# Что бы выгрузить данные из бд:
+### Что бы выгрузить данные из бд:
 ./Pandora/Pandora
 1) python manage.py dumpdata >> fixture/data.json
